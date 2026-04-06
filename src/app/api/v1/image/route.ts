@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, isApiKeyError } from "@/lib/auth/validate-api-key";
 import { createServiceClient } from "@/lib/supabase/service";
 import { validateImageInput } from "@/lib/validation/image-input";
+import { enqueueJob } from "@/lib/queue/enqueue";
 
 // POST /api/v1/image
 export async function POST(request: NextRequest) {
@@ -97,6 +98,8 @@ export async function POST(request: NextRequest) {
     console.error("job insert error:", jobError);
     return NextResponse.json({ error: "Failed to create job." }, { status: 500 });
   }
+
+  await enqueueJob(job.id);
 
   return NextResponse.json(
     {

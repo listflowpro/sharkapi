@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateSession, isSessionError } from "@/lib/auth/validate-session";
 import { createServiceClient } from "@/lib/supabase/service";
 import { validateImageInput } from "@/lib/validation/image-input";
+import { enqueueJob } from "@/lib/queue/enqueue";
 
 export async function POST(request: NextRequest) {
   // ── 1. Auth ──────────────────────────────────────────────────
@@ -96,6 +97,8 @@ export async function POST(request: NextRequest) {
     console.error("playground job insert error:", jobError);
     return NextResponse.json({ error: "Failed to create job." }, { status: 500 });
   }
+
+  await enqueueJob(job.id);
 
   return NextResponse.json(
     {

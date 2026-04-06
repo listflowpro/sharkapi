@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "worker": "tsx --tsconfig tsconfig.json src/worker/queue-worker.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.0",
@@ -14,6 +15,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "gsap": "^3.14.2",
+    "ioredis": "^5.10.1",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
     "next-intl": "^4.9.0",
@@ -29,6 +31,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
