@@ -1,0 +1,495 @@
+{
+  "nav": {
+    "product": "Product",
+    "pricing": "Pricing",
+    "docs": "Docs",
+    "trial": "Trial",
+    "login": "Login",
+    "startBuilding": "Start Building"
+  },
+  "hero": {
+    "badge": "Async Image Generation API",
+    "badgeLive": "v1 Live",
+    "headline1": "Generate",
+    "headline2": "stunning images",
+    "headline3": "via API.",
+    "subtext": "Professional async image generation with wallet-based billing, multi-token management, and S3 storage. Built for developers who ship fast.",
+    "ctaAccess": "Get API Access",
+    "ctaDocs": "View Docs",
+    "trust": {
+      "async": "Async jobs",
+      "wallet": "Wallet billing",
+      "s3": "S3 storage",
+      "moderation": "Moderation",
+      "trial": "3 free trials"
+    }
+  },
+  "howItWorks": {
+    "badge": "Simple flow",
+    "title": "How it works",
+    "subtitle": "From sign-up to image URL in six clean steps.",
+    "steps": {
+      "01": { "title": "Sign up",       "desc": "Create your account and receive 3 free trial generations instantly." },
+      "02": { "title": "Get token",     "desc": "Auto-generate your first API token on onboarding. Create more anytime." },
+      "03": { "title": "Add balance",   "desc": "Top up your wallet with $10 minimum. Only charged on successful jobs." },
+      "04": { "title": "Send request",  "desc": "POST to /v1/generate with your prompt, mode, and optional image." },
+      "05": { "title": "Poll status",   "desc": "Receive a job_id. Poll /v1/jobs/:id every 2 seconds until complete." },
+      "06": { "title": "Receive image", "desc": "Get the S3 image URL. Wallet deduction finalizes only at this point." }
+    }
+  },
+  "pricing": {
+    "badge": "Simple pricing",
+    "title": "Pay only for what you generate",
+    "subtitle": "Wallet-based. Only charged on successful jobs. Failed jobs cost nothing.",
+    "perRequest": "per request",
+    "mostPopular": "Most Popular",
+    "cta": "Get Started",
+    "note": "Minimum wallet top-up $10 · Only $10 multiples accepted"
+  },
+  "pricingPage": {
+    "hero": {
+      "badge": "Transparent pricing",
+      "title": "Simple, usage-based pricing",
+      "subtitle": "No subscriptions. No hidden fees. Load your wallet and pay per generation. Failed jobs are always free."
+    },
+    "modes": {
+      "1k": { "name": "1K Mode", "res": "1024 × 1024", "price": "$0.01", "desc": "Fast standard resolution. Great for prototyping, thumbnails, and high-volume use cases." },
+      "2k": { "name": "2K Mode", "res": "2048 × 2048", "price": "$0.02", "desc": "High-resolution output. Ideal for print, detailed renders, and premium applications." }
+    },
+    "features": {
+      "title": "What's included",
+      "items": {
+        "wallet":     "Wallet-based billing — no recurring charges",
+        "noFail":     "Failed jobs are never charged",
+        "s3":         "Generated images stored in S3",
+        "tokens":     "Unlimited API tokens per account",
+        "history":    "Full request and billing history",
+        "moderation": "Built-in content moderation",
+        "trial":      "3 free trial generations on sign-up",
+        "async":      "Async job system — poll at your pace"
+      }
+    },
+    "wallet": {
+      "title": "How wallet top-ups work",
+      "rule1": "Minimum top-up is $10",
+      "rule2": "Only multiples of $10 are accepted ($10, $20, $50, $100)",
+      "rule3": "Payments are processed via Stripe",
+      "rule4": "Balance never expires"
+    },
+    "table": {
+      "title": "Usage examples",
+      "subtitle": "What does your budget get you?",
+      "headers": { "requests": "Requests", "mode1k": "1K Mode cost", "mode2k": "2K Mode cost" }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "q1": { "q": "When am I charged?",                    "a": "Only when a job completes successfully and an image_url is returned. If a job fails or is rejected by moderation, your wallet is not touched." },
+        "q2": { "q": "What is the minimum top-up?",           "a": "The minimum wallet top-up is $10. Top-ups are only accepted in multiples of $10 (e.g. $10, $20, $30, $50, $100)." },
+        "q3": { "q": "What happens if my job fails?",         "a": "Nothing. Failed jobs — due to timeouts, server errors, or moderation blocks — do not deduct any balance from your wallet." },
+        "q4": { "q": "Can I get a refund?",                   "a": "Wallet balance is generally non-refundable. For exceptional cases, please contact our support team and we'll review your request." },
+        "q5": { "q": "Does my balance expire?",               "a": "No. Your wallet balance never expires. Top up once, use it whenever you need." },
+        "q6": { "q": "What is the difference between modes?", "a": "1K mode generates 1024×1024 images at $0.01 per request. 2K mode generates 2048×2048 images at $0.02 per request. Both use the same underlying model." }
+      }
+    },
+    "cta": {
+      "title": "Start with 3 free generations",
+      "subtitle": "Create your account and test the API immediately — no credit card required.",
+      "primary": "Create Free Account",
+      "secondary": "View API Docs"
+    }
+  },
+  "features": {
+    "badge": "Everything you need",
+    "title": "Built for production",
+    "subtitle": "Enterprise-grade image API with the simplicity of a weekend project.",
+    "items": {
+      "async":      { "title": "Async generation",    "desc": "Submit and poll. Never block your server waiting for image completion." },
+      "wallet":     { "title": "Wallet billing",       "desc": "Pre-load balance. Charged only when image_url is confirmed delivered." },
+      "tokens":     { "title": "Multiple API tokens",  "desc": "Create named tokens per project. Revoke instantly without rotating others." },
+      "imageInput": { "title": "Text + image input",   "desc": "Send text prompts, or combine with a reference image for guided output." },
+      "history":    { "title": "Full request history", "desc": "Every job logged with status, cost, mode, token, and moderation result." },
+      "moderation": { "title": "Moderation system",    "desc": "Built-in illegal content detection blocks harmful prompts before generation." }
+    }
+  },
+  "codeExamples": {
+    "badge": "Simple integration",
+    "title": "Integrate in 60 seconds",
+    "subtitle": "Three steps from any language to your first generated image.",
+    "tabs": { "curl": "cURL", "js": "JavaScript", "python": "Python" },
+    "stepLabels": { "request": "Send request", "poll": "Poll status", "result": "Get result" },
+    "copyLabel": "Copy",
+    "copiedLabel": "Copied!"
+  },
+  "oceanCta": {
+    "title": "Ready to dive in?",
+    "subtitle": "Join developers building with SharkApi.dev. Start with 3 free generations — no credit card required.",
+    "primary": "Create Free Account",
+    "secondary": "Read the Docs"
+  },
+  "trial": {
+    "badge": "Free for everyone",
+    "title": "3 free image generations.",
+    "titleHighlight": "No card required.",
+    "subtitle": "Every account gets 3 complimentary generations on-site. Test 1K and 2K modes before adding any balance.",
+    "ctaTry": "Try for Free",
+    "ctaDocs": "View Docs"
+  },
+  "footer": {
+    "tagline": "Professional async image generation API built for developers.",
+    "status": "All systems operational",
+    "copyright": "All rights reserved.",
+    "tagline2": "Built for developers, powered by deep-sea tech.",
+    "sections": {
+      "product": "Product",
+      "developers": "Developers",
+      "legal": "Legal",
+      "support": "Support"
+    },
+    "links": {
+      "pricing":    "Pricing",
+      "docs":       "Docs",
+      "trial":      "Free Trial",
+      "status":     "Status",
+      "apiRef":     "API Reference",
+      "auth":       "Authentication",
+      "generate":   "Generate Image",
+      "jobStatus":  "Job Status",
+      "errors":     "Error Codes",
+      "terms":      "Terms of Service",
+      "privacy":    "Privacy Policy",
+      "aup":        "Acceptable Use",
+      "contact":    "Contact",
+      "chat":       "Live Chat"
+    }
+  },
+  "api": {
+    "pollLabel": "Poll every 2s",
+    "chargeLabel": "Charged only on success",
+    "storageLabel": "S3 URL returned"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your SharkApi.dev account",
+      "email": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "password": "Password",
+      "passwordPlaceholder": "Your password",
+      "remember": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up free",
+      "or": "or"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start building with SharkApi.dev today",
+      "email": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "password": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "terms": "I agree to the",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "freeBenefits": "What you get on sign-up:",
+      "benefit1": "3 free image generations",
+      "benefit2": "First API token auto-created",
+      "benefit3": "Personal wallet account",
+      "benefit4": "Full API access immediately"
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we'll send you a reset link",
+      "email": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "submit": "Send Reset Link",
+      "backToLogin": "Back to sign in",
+      "successTitle": "Check your inbox",
+      "successSubtitle": "We sent a password reset link to",
+      "successNote": "Didn't receive it? Check your spam folder or try again."
+    },
+    "panel": {
+      "tagline": "The image generation API that bites back.",
+      "benefits": {
+        "async": "Async job system — never wait on your server",
+        "wallet": "Wallet billing — pay only for success",
+        "tokens": "Multiple API tokens per account",
+        "trial": "3 free generations on every new account"
+      }
+    }
+  },
+  "docs": {
+    "sidebar": {
+      "gettingStarted": "Getting Started",
+      "quickStart": "Quick Start",
+      "authentication": "Authentication",
+      "endpoints": "Endpoints",
+      "generate": "Generate Image",
+      "jobStatus": "Job Status",
+      "walletBalance": "Wallet Balance",
+      "usageHistory": "Usage & History",
+      "reference": "Reference",
+      "errorCodes": "Error Codes",
+      "moderation": "Moderation",
+      "onThisPage": "On this page",
+      "searchPlaceholder": "Search docs…"
+    },
+    "landing": {
+      "badge": "Documentation",
+      "title": "SharkApi.dev Docs",
+      "subtitle": "Everything you need to integrate async image generation into your application.",
+      "quickStartTitle": "Quick Start",
+      "quickStartDesc": "Get your first image in under 5 minutes.",
+      "endpointsTitle": "API Reference",
+      "endpointsDesc": "Full endpoint documentation with examples."
+    }
+  },
+  "contact": {
+    "badge": "Get in touch",
+    "title": "Contact & Support",
+    "subtitle": "We're here to help. Reach out via the form or chat with our support team.",
+    "form": {
+      "name": "Full name",
+      "namePlaceholder": "Your name",
+      "email": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "How can we help?",
+      "message": "Message",
+      "messagePlaceholder": "Describe your issue or question in detail...",
+      "submit": "Send Message",
+      "successTitle": "Message sent!",
+      "successDesc": "We'll get back to you within 24 hours."
+    },
+    "info": {
+      "supportTitle": "Support",
+      "supportDesc": "For technical issues, API questions, or billing help.",
+      "businessTitle": "Business",
+      "businessDesc": "For partnership or enterprise inquiries.",
+      "responseTime": "Response time: within 24 hours"
+    }
+  },
+  "common": {
+    "language": "Language",
+    "turkish": "Türkçe",
+    "english": "English"
+  },
+  "dashboard": {
+    "nav": {
+      "overview":     "Overview",
+      "generate":     "Generate",
+      "billing":      "Billing",
+      "wallet":       "Wallet",
+      "addBalance":   "Add Balance",
+      "transactions": "Transactions",
+      "api":          "API",
+      "tokens":       "API Tokens",
+      "history":      "Request History",
+      "analytics":    "Analytics",
+      "usage":        "Usage",
+      "account":      "Account",
+      "profile":      "Profile",
+      "signOut":      "Sign Out",
+      "backToSite":   "Back to Site"
+    },
+    "header": {
+      "balance":      "Balance",
+      "addBalance":   "Add Balance",
+      "freeTrials":   "free trials left"
+    },
+    "overview": {
+      "title":              "Overview",
+      "welcome":            "Welcome back",
+      "balance":            "Wallet Balance",
+      "todayRequests":      "Today's Requests",
+      "totalJobs":          "Total Jobs",
+      "activeTokens":       "Active Tokens",
+      "recentJobs":         "Recent Jobs",
+      "recentTransactions": "Recent Transactions",
+      "viewAll":            "View all",
+      "noJobs":             "No jobs yet",
+      "noTransactions":     "No transactions yet",
+      "freeTrials":         "free trials remaining"
+    },
+    "wallet": {
+      "title":          "Wallet",
+      "subtitle":       "Manage your balance and billing",
+      "balance":        "Current Balance",
+      "addBalance":     "Add Balance",
+      "transactions":   "Transaction History",
+      "noTransactions": "No transactions yet"
+    },
+    "addBalance": {
+      "title":       "Add Balance",
+      "subtitle":    "Top up your wallet. Minimum $10, multiples of $10 only.",
+      "preset":      "Quick amounts",
+      "custom":      "Custom amount",
+      "customPlaceholder": "Enter amount (e.g. 30)",
+      "proceed":     "Proceed to Stripe",
+      "stripeNote":  "You will be redirected to Stripe to complete payment.",
+      "rules": {
+        "min":      "Minimum top-up: $10",
+        "multiple": "Must be a multiple of $10",
+        "stripe":   "Processed via Stripe · Secure"
+      }
+    },
+    "transactions": {
+      "title":    "Transactions",
+      "subtitle": "Full billing history",
+      "filter": {
+        "all":     "All",
+        "topUp":   "Top-ups",
+        "charges": "Charges",
+        "refunds": "Refunds",
+        "other":   "Other"
+      },
+      "table": {
+        "date":        "Date",
+        "description": "Description",
+        "type":        "Type",
+        "amount":      "Amount",
+        "status":      "Status"
+      },
+      "types": {
+        "top-up":     "Top-up",
+        "charge":     "Charge",
+        "refund":     "Refund",
+        "adjustment": "Adjustment",
+        "trial":      "Free Trial"
+      },
+      "empty": "No transactions found"
+    },
+    "tokens": {
+      "title":    "API Tokens",
+      "subtitle": "Manage your API authentication tokens",
+      "create":   "Create Token",
+      "table": {
+        "name":     "Name",
+        "token":    "Token",
+        "status":   "Status",
+        "created":  "Created",
+        "lastUsed": "Last Used",
+        "requests": "Requests",
+        "actions":  "Actions"
+      },
+      "status": {
+        "active":  "Active",
+        "revoked": "Revoked"
+      },
+      "actions": {
+        "revoke": "Revoke",
+        "delete": "Delete",
+        "copy":   "Copy",
+        "copied": "Copied!"
+      },
+      "newToken": {
+        "title":   "New token created",
+        "warning": "This is the only time you'll see the full token. Copy it now.",
+        "dismiss": "I've copied it, dismiss"
+      },
+      "empty": "No tokens yet. Create your first token to start using the API.",
+      "createModal": {
+        "title":       "Create New Token",
+        "namePlaceholder": "e.g. production-backend",
+        "label":       "Token name",
+        "submit":      "Generate Token",
+        "cancel":      "Cancel"
+      }
+    },
+    "history": {
+      "title":    "Request History",
+      "subtitle": "All API generation jobs",
+      "filter": {
+        "all":       "All",
+        "complete":  "Complete",
+        "failed":    "Failed",
+        "moderated": "Moderated"
+      },
+      "table": {
+        "jobId":  "Job ID",
+        "status": "Status",
+        "type":   "Type",
+        "mode":   "Mode",
+        "prompt": "Prompt",
+        "cost":   "Cost",
+        "token":  "Token",
+        "date":   "Date"
+      },
+      "viewImage": "View Image",
+      "empty":     "No requests yet"
+    },
+    "usage": {
+      "title":         "Usage & Analytics",
+      "subtitle":      "Last 14 days overview",
+      "totalRequests": "Total Requests",
+      "totalSpend":    "Total Spend",
+      "successRate":   "Success Rate",
+      "avgDaily":      "Avg / Day",
+      "chart": {
+        "title":    "Daily Request Volume",
+        "requests": "Requests",
+        "spend":    "Spend ($)"
+      },
+      "modes": {
+        "title": "Mode Distribution",
+        "1k":    "1K Mode",
+        "2k":    "2K Mode"
+      },
+      "breakdown": {
+        "title":     "Status Breakdown",
+        "success":   "Successful",
+        "failed":    "Failed",
+        "moderated": "Moderated"
+      }
+    },
+    "generate": {
+      "title":       "Generate Image",
+      "subtitle":    "Create AI images — uses wallet balance or free trial",
+      "modeLabel":   "Output Mode",
+      "promptLabel": "Prompt",
+      "promptPlaceholder": "Describe the image you want to generate...",
+      "imageLabel":  "Reference Image",
+      "imageHint":   "Optional · JPEG or PNG · max 10MB",
+      "imageDrop":   "Drop image or click to upload",
+      "imageRemove": "Remove",
+      "submit":      "Generate",
+      "generating":  "Generating your image...",
+      "trialsLeft":  "free trials left",
+      "trialBadge":  "Free Trial",
+      "balanceLow":  "Insufficient wallet balance.",
+      "errorPrompt": "Please enter a prompt.",
+      "resultTitle": "Generated Image",
+      "jobId":       "Job ID",
+      "mode":        "Mode",
+      "cost":        "Cost",
+      "newGen":      "Generate Another"
+    },
+    "profile": {
+      "title":              "Account Settings",
+      "subtitle":           "Manage your account information",
+      "email":              "Email Address",
+      "memberSince":        "Member Since",
+      "changePassword":     "Change Password",
+      "currentPassword":    "Current Password",
+      "newPassword":        "New Password",
+      "confirmPassword":    "Confirm New Password",
+      "savePassword":       "Update Password",
+      "dangerZone":         "Danger Zone",
+      "deleteAccount":      "Delete Account",
+      "deleteWarning":      "This action is irreversible. All data will be permanently deleted.",
+      "avatarInitials":     "Avatar Initials",
+      "accountStats":       "Account Stats",
+      "totalSpend":         "Total Spend",
+      "totalRequests":      "Total Requests",
+      "passwordUpdated":    "Password updated successfully!"
+    }
+  }
+}

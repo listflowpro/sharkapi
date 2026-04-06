@@ -1,0 +1,495 @@
+{
+  "nav": {
+    "product": "Ürün",
+    "pricing": "Fiyatlandırma",
+    "docs": "Dökümanlar",
+    "trial": "Deneme",
+    "login": "Giriş Yap",
+    "startBuilding": "Geliştirmeye Başla"
+  },
+  "hero": {
+    "badge": "Async Görüntü Üretim API'si",
+    "badgeLive": "v1 Canlı",
+    "headline1": "API ile",
+    "headline2": "etkileyici görseller",
+    "headline3": "üretin.",
+    "subtext": "Cüzdan tabanlı ödeme, çoklu token yönetimi ve S3 depolama ile profesyonel async görüntü üretimi. Hızlı geliştiren yazılımcılar için inşa edildi.",
+    "ctaAccess": "API Erişimi Al",
+    "ctaDocs": "Dökümanları Gör",
+    "trust": {
+      "async": "Async işler",
+      "wallet": "Cüzdan ödemesi",
+      "s3": "S3 depolama",
+      "moderation": "Moderasyon",
+      "trial": "3 ücretsiz deneme"
+    }
+  },
+  "howItWorks": {
+    "badge": "Basit akış",
+    "title": "Nasıl çalışır?",
+    "subtitle": "Kayıttan görüntü URL'sine altı temiz adımda.",
+    "steps": {
+      "01": { "title": "Kayıt ol",       "desc": "Hesabınızı oluşturun ve anında 3 ücretsiz deneme üretimi kazanın." },
+      "02": { "title": "Token al",        "desc": "İlk API tokenınız kayıtta otomatik oluşturulur. İstediğiniz zaman daha fazla ekleyin." },
+      "03": { "title": "Bakiye yükle",    "desc": "Cüzdanınıza minimum $10 yükleyin. Sadece başarılı işlerden ücret alınır." },
+      "04": { "title": "İstek gönder",    "desc": "Prompt, mod ve isteğe bağlı görsel ile /v1/generate'e POST isteği atın." },
+      "05": { "title": "Durumu takip et", "desc": "Bir job_id alırsınız. Tamamlanana kadar /v1/jobs/:id'yi 2 saniyede bir sorgulayın." },
+      "06": { "title": "Görseli al",      "desc": "S3 görüntü URL'sini alın. Cüzdan kesintisi yalnızca bu noktada kesinleşir." }
+    }
+  },
+  "pricing": {
+    "badge": "Sade fiyatlandırma",
+    "title": "Yalnızca ürettiğiniz kadar ödeyin",
+    "subtitle": "Cüzdan tabanlı. Yalnızca başarılı işlerden ücret alınır. Başarısız işler ücretsizdir.",
+    "perRequest": "istek başına",
+    "mostPopular": "En Popüler",
+    "cta": "Başla",
+    "note": "Minimum cüzdan yükleme $10 · Yalnızca $10 katları kabul edilir"
+  },
+  "pricingPage": {
+    "hero": {
+      "badge": "Şeffaf fiyatlandırma",
+      "title": "Sade, kullanım bazlı fiyatlandırma",
+      "subtitle": "Abonelik yok. Gizli ücret yok. Cüzdanınızı doldurun, üretim başına ödeyin. Başarısız işler her zaman ücretsizdir."
+    },
+    "modes": {
+      "1k": { "name": "1K Mod", "res": "1024 × 1024", "price": "$0.01", "desc": "Hızlı standart çözünürlük. Prototipleme, küçük resimler ve yüksek hacimli kullanım için idealdir." },
+      "2k": { "name": "2K Mod", "res": "2048 × 2048", "price": "$0.02", "desc": "Yüksek çözünürlüklü çıktı. Baskı, detaylı render'lar ve premium uygulamalar için idealdir." }
+    },
+    "features": {
+      "title": "Neler dahil?",
+      "items": {
+        "wallet":     "Cüzdan tabanlı faturalandırma — tekrarlayan ücret yok",
+        "noFail":     "Başarısız işler hiçbir zaman ücretlendirilmez",
+        "s3":         "Üretilen görseller S3'te saklanır",
+        "tokens":     "Hesap başına sınırsız API token",
+        "history":    "Tam istek ve fatura geçmişi",
+        "moderation": "Yerleşik içerik moderasyonu",
+        "trial":      "Kayıtta 3 ücretsiz deneme üretimi",
+        "async":      "Async iş sistemi — kendi hızınızda sorgulayın"
+      }
+    },
+    "wallet": {
+      "title": "Cüzdan yükleme nasıl çalışır?",
+      "rule1": "Minimum yükleme $10'dur",
+      "rule2": "Yalnızca $10 katları kabul edilir ($10, $20, $50, $100)",
+      "rule3": "Ödemeler Stripe ile işlenir",
+      "rule4": "Bakiye sona ermez"
+    },
+    "table": {
+      "title": "Kullanım örnekleri",
+      "subtitle": "Bütçeniz size ne kazandırır?",
+      "headers": { "requests": "İstek sayısı", "mode1k": "1K Mod maliyeti", "mode2k": "2K Mod maliyeti" }
+    },
+    "faq": {
+      "title": "Sık sorulan sorular",
+      "items": {
+        "q1": { "q": "Ne zaman ücretlendirilirim?",                        "a": "Yalnızca bir iş başarıyla tamamlandığında ve bir image_url döndürüldüğünde. Bir iş başarısız olursa veya moderasyon tarafından reddedilirse cüzdanınıza dokunulmaz." },
+        "q2": { "q": "Minimum yükleme miktarı nedir?",                    "a": "Minimum cüzdan yükleme miktarı $10'dur. Yüklemeler yalnızca $10'un katları olarak kabul edilir (örn. $10, $20, $30, $50, $100)." },
+        "q3": { "q": "İşim başarısız olursa ne olur?",                    "a": "Hiçbir şey. Zaman aşımı, sunucu hataları veya moderasyon blokları nedeniyle başarısız olan işler cüzdanınızdan hiçbir bakiye düşürmez." },
+        "q4": { "q": "Geri ödeme alabilir miyim?",                        "a": "Cüzdan bakiyesi genel olarak iade edilemez. İstisnai durumlarda lütfen destek ekibimizle iletişime geçin, talebinizi inceleyeceğiz." },
+        "q5": { "q": "Bakiyem sona erer mi?",                             "a": "Hayır. Cüzdan bakiyeniz hiçbir zaman sona ermez. Bir kez yükleyin, istediğiniz zaman kullanın." },
+        "q6": { "q": "Modlar arasındaki fark nedir?",                     "a": "1K modu, istek başına $0.01 fiyatıyla 1024×1024 görüntüler üretir. 2K modu, istek başına $0.02 fiyatıyla 2048×2048 görüntüler üretir. Her ikisi de aynı temel modeli kullanır." }
+      }
+    },
+    "cta": {
+      "title": "3 ücretsiz üretimle başlayın",
+      "subtitle": "Hesabınızı oluşturun ve API'yi hemen test edin — kredi kartı gerekmez.",
+      "primary": "Ücretsiz Hesap Oluştur",
+      "secondary": "API Dökümanlarını Gör"
+    }
+  },
+  "features": {
+    "badge": "İhtiyacınız olan her şey",
+    "title": "Prodüksiyon için inşa edildi",
+    "subtitle": "Hafta sonu projesi basitliğiyle kurumsal düzey görüntü API'si.",
+    "items": {
+      "async":      { "title": "Async üretim",         "desc": "Gönder ve sorgula. Görüntü tamamlanmasını beklerken sunucunuzu bloke etmeyin." },
+      "wallet":     { "title": "Cüzdan ödemesi",        "desc": "Bakiye yükleyin. Yalnızca image_url teslim onaylandığında ücret kesilir." },
+      "tokens":     { "title": "Çoklu API tokenları",   "desc": "Proje başına adlandırılmış tokenlar oluşturun. Diğerlerini etkilemeden anında iptal edin." },
+      "imageInput": { "title": "Metin + görsel girişi", "desc": "Metin promptları gönderin ya da rehberli çıktı için referans görselle birleştirin." },
+      "history":    { "title": "Tam istek geçmişi",     "desc": "Her iş; durum, maliyet, mod, token ve moderasyon sonucu ile loglanır." },
+      "moderation": { "title": "Moderasyon sistemi",    "desc": "Yerleşik yasadışı içerik tespiti, zararlı promptları üretimden önce engeller." }
+    }
+  },
+  "codeExamples": {
+    "badge": "Kolay entegrasyon",
+    "title": "60 saniyede entegre edin",
+    "subtitle": "Herhangi bir dilden üç adımda ilk üretilen görselinize ulaşın.",
+    "tabs": { "curl": "cURL", "js": "JavaScript", "python": "Python" },
+    "stepLabels": { "request": "İstek gönder", "poll": "Durumu sorgula", "result": "Sonucu al" },
+    "copyLabel": "Kopyala",
+    "copiedLabel": "Kopyalandı!"
+  },
+  "oceanCta": {
+    "title": "Dalmaya hazır mısınız?",
+    "subtitle": "SharkApi.dev ile geliştiren yazılımcılara katılın. 3 ücretsiz üretimle başlayın — kredi kartı gerekmez.",
+    "primary": "Ücretsiz Hesap Oluştur",
+    "secondary": "Dökümanları Oku"
+  },
+  "trial": {
+    "badge": "Herkese ücretsiz",
+    "title": "3 ücretsiz görüntü üretimi.",
+    "titleHighlight": "Kart gerekmez.",
+    "subtitle": "Her hesap, site içinde 3 tamamlayıcı üretim hakkı kazanır. Bakiye eklemeden önce 1K ve 2K modlarını test edin.",
+    "ctaTry": "Ücretsiz Dene",
+    "ctaDocs": "Dökümanları Gör"
+  },
+  "footer": {
+    "tagline": "Yazılımcılar için inşa edilmiş profesyonel async görüntü üretim API'si.",
+    "status": "Tüm sistemler çalışıyor",
+    "copyright": "Tüm hakları saklıdır.",
+    "tagline2": "Yazılımcılar için, derin deniz teknolojisiyle.",
+    "sections": {
+      "product": "Ürün",
+      "developers": "Geliştiriciler",
+      "legal": "Hukuki",
+      "support": "Destek"
+    },
+    "links": {
+      "pricing":    "Fiyatlandırma",
+      "docs":       "Dökümanlar",
+      "trial":      "Ücretsiz Deneme",
+      "status":     "Durum",
+      "apiRef":     "API Referansı",
+      "auth":       "Kimlik Doğrulama",
+      "generate":   "Görüntü Üret",
+      "jobStatus":  "İş Durumu",
+      "errors":     "Hata Kodları",
+      "terms":      "Kullanım Koşulları",
+      "privacy":    "Gizlilik Politikası",
+      "aup":        "Kabul Edilebilir Kullanım",
+      "contact":    "İletişim",
+      "chat":       "Canlı Destek"
+    }
+  },
+  "api": {
+    "pollLabel": "Her 2s'de sorgula",
+    "chargeLabel": "Yalnızca başarıda ücret",
+    "storageLabel": "S3 URL döner"
+  },
+  "auth": {
+    "login": {
+      "title": "Tekrar hoş geldiniz",
+      "subtitle": "SharkApi.dev hesabınıza giriş yapın",
+      "email": "E-posta adresi",
+      "emailPlaceholder": "siz@sirket.com",
+      "password": "Şifre",
+      "passwordPlaceholder": "Şifreniz",
+      "remember": "Beni hatırla",
+      "forgotPassword": "Şifremi unuttum",
+      "submit": "Giriş Yap",
+      "noAccount": "Hesabınız yok mu?",
+      "signUp": "Ücretsiz kayıt ol",
+      "or": "veya"
+    },
+    "register": {
+      "title": "Hesabınızı oluşturun",
+      "subtitle": "SharkApi.dev ile bugün geliştirmeye başlayın",
+      "email": "E-posta adresi",
+      "emailPlaceholder": "siz@sirket.com",
+      "password": "Şifre",
+      "passwordPlaceholder": "En az 8 karakter",
+      "confirmPassword": "Şifreyi onayla",
+      "confirmPasswordPlaceholder": "Şifrenizi tekrarlayın",
+      "terms": "Şunları kabul ediyorum:",
+      "termsLink": "Kullanım Koşulları",
+      "and": "ve",
+      "privacyLink": "Gizlilik Politikası",
+      "submit": "Hesap Oluştur",
+      "hasAccount": "Zaten hesabınız var mı?",
+      "signIn": "Giriş yap",
+      "freeBenefits": "Kayıtta neler alırsınız:",
+      "benefit1": "3 ücretsiz görüntü üretimi",
+      "benefit2": "İlk API token otomatik oluşturulur",
+      "benefit3": "Kişisel cüzdan hesabı",
+      "benefit4": "Hemen tam API erişimi"
+    },
+    "forgotPassword": {
+      "title": "Şifrenizi sıfırlayın",
+      "subtitle": "E-postanızı girin, size bir sıfırlama bağlantısı gönderelim",
+      "email": "E-posta adresi",
+      "emailPlaceholder": "siz@sirket.com",
+      "submit": "Sıfırlama Bağlantısı Gönder",
+      "backToLogin": "Giriş sayfasına dön",
+      "successTitle": "Gelen kutunuzu kontrol edin",
+      "successSubtitle": "Şifre sıfırlama bağlantısı gönderildi:",
+      "successNote": "Almadınız mı? Spam klasörünüzü kontrol edin veya tekrar deneyin."
+    },
+    "panel": {
+      "tagline": "Geri ısıran görüntü üretim API'si.",
+      "benefits": {
+        "async": "Async iş sistemi — sunucunuzu hiç beklettirmeyin",
+        "wallet": "Cüzdan ödemesi — yalnızca başarı için ödeyin",
+        "tokens": "Hesap başına çoklu API token",
+        "trial": "Her yeni hesapta 3 ücretsiz üretim"
+      }
+    }
+  },
+  "docs": {
+    "sidebar": {
+      "gettingStarted": "Başlangıç",
+      "quickStart": "Hızlı Başlangıç",
+      "authentication": "Kimlik Doğrulama",
+      "endpoints": "Endpoint'ler",
+      "generate": "Görüntü Üret",
+      "jobStatus": "İş Durumu",
+      "walletBalance": "Cüzdan Bakiyesi",
+      "usageHistory": "Kullanım Geçmişi",
+      "reference": "Referans",
+      "errorCodes": "Hata Kodları",
+      "moderation": "Moderasyon",
+      "onThisPage": "Bu sayfada",
+      "searchPlaceholder": "Döküman ara…"
+    },
+    "landing": {
+      "badge": "Dökümanlar",
+      "title": "SharkApi.dev Dökümanları",
+      "subtitle": "Async görüntü üretimini uygulamanıza entegre etmek için ihtiyacınız olan her şey.",
+      "quickStartTitle": "Hızlı Başlangıç",
+      "quickStartDesc": "5 dakikadan kısa sürede ilk görselinizi üretin.",
+      "endpointsTitle": "API Referansı",
+      "endpointsDesc": "Örneklerle tam endpoint dokümantasyonu."
+    }
+  },
+  "contact": {
+    "badge": "İletişime geçin",
+    "title": "İletişim & Destek",
+    "subtitle": "Yardım etmek için buradayız. Form aracılığıyla ulaşın veya destek ekibimizle sohbet edin.",
+    "form": {
+      "name": "Ad Soyad",
+      "namePlaceholder": "Adınız",
+      "email": "E-posta adresi",
+      "emailPlaceholder": "siz@sirket.com",
+      "subject": "Konu",
+      "subjectPlaceholder": "Nasıl yardımcı olabiliriz?",
+      "message": "Mesaj",
+      "messagePlaceholder": "Sorununuzu veya sorunuzu ayrıntılı olarak açıklayın...",
+      "submit": "Mesaj Gönder",
+      "successTitle": "Mesaj gönderildi!",
+      "successDesc": "24 saat içinde size geri döneceğiz."
+    },
+    "info": {
+      "supportTitle": "Destek",
+      "supportDesc": "Teknik sorunlar, API soruları veya fatura yardımı için.",
+      "businessTitle": "İş Ortaklığı",
+      "businessDesc": "Ortaklık veya kurumsal sorgulamalar için.",
+      "responseTime": "Yanıt süresi: 24 saat içinde"
+    }
+  },
+  "common": {
+    "language": "Dil",
+    "turkish": "Türkçe",
+    "english": "English"
+  },
+  "dashboard": {
+    "nav": {
+      "overview":     "Genel Bakış",
+      "generate":     "Görsel Oluştur",
+      "billing":      "Faturalama",
+      "wallet":       "Cüzdan",
+      "addBalance":   "Bakiye Ekle",
+      "transactions": "İşlemler",
+      "api":          "API",
+      "tokens":       "API Tokenları",
+      "history":      "İstek Geçmişi",
+      "analytics":    "Analitik",
+      "usage":        "Kullanım",
+      "account":      "Hesap",
+      "profile":      "Profil",
+      "signOut":      "Çıkış Yap",
+      "backToSite":   "Siteye Dön"
+    },
+    "header": {
+      "balance":    "Bakiye",
+      "addBalance": "Bakiye Ekle",
+      "freeTrials": "ücretsiz deneme kaldı"
+    },
+    "overview": {
+      "title":              "Genel Bakış",
+      "welcome":            "Tekrar hoş geldin",
+      "balance":            "Cüzdan Bakiyesi",
+      "todayRequests":      "Bugünkü İstekler",
+      "totalJobs":          "Toplam İş",
+      "activeTokens":       "Aktif Token",
+      "recentJobs":         "Son İşler",
+      "recentTransactions": "Son İşlemler",
+      "viewAll":            "Tümünü gör",
+      "noJobs":             "Henüz iş yok",
+      "noTransactions":     "Henüz işlem yok",
+      "freeTrials":         "ücretsiz deneme kaldı"
+    },
+    "wallet": {
+      "title":          "Cüzdan",
+      "subtitle":       "Bakiyenizi ve faturalandırmanızı yönetin",
+      "balance":        "Mevcut Bakiye",
+      "addBalance":     "Bakiye Ekle",
+      "transactions":   "İşlem Geçmişi",
+      "noTransactions": "Henüz işlem yok"
+    },
+    "addBalance": {
+      "title":             "Bakiye Ekle",
+      "subtitle":          "Cüzdanınızı doldurun. Minimum $10, sadece $10'ın katları kabul edilir.",
+      "preset":            "Hızlı tutarlar",
+      "custom":            "Özel tutar",
+      "customPlaceholder": "Tutar girin (örn. 30)",
+      "proceed":           "Stripe'a Geç",
+      "stripeNote":        "Ödemeyi tamamlamak için Stripe'a yönlendirileceksiniz.",
+      "rules": {
+        "min":      "Minimum yükleme: $10",
+        "multiple": "$10'ın katı olmalıdır",
+        "stripe":   "Stripe ile güvenli işlem"
+      }
+    },
+    "transactions": {
+      "title":    "İşlemler",
+      "subtitle": "Tüm faturalama geçmişi",
+      "filter": {
+        "all":     "Tümü",
+        "topUp":   "Yüklemeler",
+        "charges": "Ücretlendirmeler",
+        "refunds": "İadeler",
+        "other":   "Diğer"
+      },
+      "table": {
+        "date":        "Tarih",
+        "description": "Açıklama",
+        "type":        "Tür",
+        "amount":      "Tutar",
+        "status":      "Durum"
+      },
+      "types": {
+        "top-up":     "Yükleme",
+        "charge":     "Ücret",
+        "refund":     "İade",
+        "adjustment": "Düzeltme",
+        "trial":      "Ücretsiz Deneme"
+      },
+      "empty": "İşlem bulunamadı"
+    },
+    "tokens": {
+      "title":    "API Tokenları",
+      "subtitle": "API kimlik doğrulama tokenlarınızı yönetin",
+      "create":   "Token Oluştur",
+      "table": {
+        "name":     "Ad",
+        "token":    "Token",
+        "status":   "Durum",
+        "created":  "Oluşturulma",
+        "lastUsed": "Son Kullanım",
+        "requests": "İstekler",
+        "actions":  "İşlemler"
+      },
+      "status": {
+        "active":  "Aktif",
+        "revoked": "İptal Edildi"
+      },
+      "actions": {
+        "revoke": "İptal Et",
+        "delete": "Sil",
+        "copy":   "Kopyala",
+        "copied": "Kopyalandı!"
+      },
+      "newToken": {
+        "title":   "Yeni token oluşturuldu",
+        "warning": "Token'ı yalnızca bu sefer görebilirsiniz. Şimdi kopyalayın.",
+        "dismiss": "Kopyaladım, kapat"
+      },
+      "empty": "Henüz token yok. API'yi kullanmaya başlamak için ilk tokenınızı oluşturun.",
+      "createModal": {
+        "title":             "Yeni Token Oluştur",
+        "namePlaceholder":   "örn. production-backend",
+        "label":             "Token adı",
+        "submit":            "Token Oluştur",
+        "cancel":            "İptal"
+      }
+    },
+    "history": {
+      "title":    "İstek Geçmişi",
+      "subtitle": "Tüm API üretim işleri",
+      "filter": {
+        "all":       "Tümü",
+        "complete":  "Tamamlandı",
+        "failed":    "Başarısız",
+        "moderated": "Moderasyon"
+      },
+      "table": {
+        "jobId":  "İş ID",
+        "status": "Durum",
+        "type":   "Tür",
+        "mode":   "Mod",
+        "prompt": "Prompt",
+        "cost":   "Maliyet",
+        "token":  "Token",
+        "date":   "Tarih"
+      },
+      "viewImage": "Görseli Gör",
+      "empty":     "Henüz istek yok"
+    },
+    "usage": {
+      "title":         "Kullanım & Analitik",
+      "subtitle":      "Son 14 günlük özet",
+      "totalRequests": "Toplam İstek",
+      "totalSpend":    "Toplam Harcama",
+      "successRate":   "Başarı Oranı",
+      "avgDaily":      "Günlük Ort.",
+      "chart": {
+        "title":    "Günlük İstek Hacmi",
+        "requests": "İstekler",
+        "spend":    "Harcama ($)"
+      },
+      "modes": {
+        "title": "Mod Dağılımı",
+        "1k":    "1K Mod",
+        "2k":    "2K Mod"
+      },
+      "breakdown": {
+        "title":     "Durum Dağılımı",
+        "success":   "Başarılı",
+        "failed":    "Başarısız",
+        "moderated": "Moderasyon"
+      }
+    },
+    "generate": {
+      "title":       "Görsel Oluştur",
+      "subtitle":    "AI görseller oluşturun — cüzdan bakiyesi veya ücretsiz deneme kullanır",
+      "modeLabel":   "Çıktı Modu",
+      "promptLabel": "Prompt",
+      "promptPlaceholder": "Oluşturmak istediğiniz görseli tanımlayın...",
+      "imageLabel":  "Referans Görsel",
+      "imageHint":   "İsteğe bağlı · JPEG veya PNG · max 10MB",
+      "imageDrop":   "Görsel bırakın veya tıklayın",
+      "imageRemove": "Kaldır",
+      "submit":      "Oluştur",
+      "generating":  "Görseliniz oluşturuluyor...",
+      "trialsLeft":  "ücretsiz deneme kaldı",
+      "trialBadge":  "Ücretsiz Deneme",
+      "balanceLow":  "Yetersiz cüzdan bakiyesi.",
+      "errorPrompt": "Lütfen bir prompt girin.",
+      "resultTitle": "Oluşturulan Görsel",
+      "jobId":       "İş ID",
+      "mode":        "Mod",
+      "cost":        "Ücret",
+      "newGen":      "Yeniden Oluştur"
+    },
+    "profile": {
+      "title":           "Hesap Ayarları",
+      "subtitle":        "Hesap bilgilerinizi yönetin",
+      "email":           "E-posta Adresi",
+      "memberSince":     "Üyelik Tarihi",
+      "changePassword":  "Şifre Değiştir",
+      "currentPassword": "Mevcut Şifre",
+      "newPassword":     "Yeni Şifre",
+      "confirmPassword": "Yeni Şifreyi Onayla",
+      "savePassword":    "Şifreyi Güncelle",
+      "dangerZone":      "Tehlikeli Bölge",
+      "deleteAccount":   "Hesabı Sil",
+      "deleteWarning":   "Bu işlem geri alınamaz. Tüm veriler kalıcı olarak silinecek.",
+      "avatarInitials":  "Avatar Baş Harfleri",
+      "accountStats":    "Hesap İstatistikleri",
+      "totalSpend":      "Toplam Harcama",
+      "totalRequests":   "Toplam İstek",
+      "passwordUpdated": "Şifre başarıyla güncellendi!"
+    }
+  }
+}

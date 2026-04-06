@@ -1,26 +1,256 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================
+   SHARKAPI — DESIGN SYSTEM
+   Ocean-depth premium dark theme
+   ============================================================ */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
+  /* --- Ocean depth palette --- */
+  --color-ocean-950: #020810;
+  --color-ocean-900: #060E1A;
+  --color-ocean-800: #0B1929;
+  --color-ocean-700: #0F2238;
+  --color-ocean-600: #162B4A;
+  --color-ocean-500: #1A3B5C;
+  --color-ocean-400: #2A5A8A;
+  --color-ocean-300: #4A7094;
+  --color-ocean-200: #7BA8CC;
+  --color-ocean-100: #B8D4F0;
+  --color-ocean-50:  #E8F4FF;
+
+  /* --- Electric blue accent (logo API color) --- */
+  --color-electric-700: #005A80;
+  --color-electric-600: #0080B0;
+  --color-electric-500: #0099CC;
+  --color-electric-400: #00AEEF;
+  --color-electric-300: #33C3F5;
+  --color-electric-200: #66D8F8;
+  --color-electric-100: #AAEaFF;
+
+  /* --- Status --- */
+  --color-aqua-500:  #00B894;
+  --color-aqua-400:  #00D4AA;
+  --color-aqua-300:  #33DDBB;
+  --color-coral-500: #C0392B;
+  --color-coral-400: #FF5252;
+  --color-coral-300: #FF7070;
+  --color-amber-500: #D97706;
+  --color-amber-400: #F59E0B;
+  --color-amber-300: #FBB040;
+
+  /* --- Typography --- */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* --- Animations --- */
+  --animate-wave:        wave 10s ease-in-out infinite;
+  --animate-wave-slow:   wave 16s ease-in-out infinite reverse;
+  --animate-wave-fast:   wave 6s ease-in-out infinite;
+  --animate-bubble:      bubble-rise 7s ease-in-out infinite;
+  --animate-glow-pulse:  glow-pulse 4s ease-in-out infinite;
+  --animate-shimmer:     shimmer 2.5s linear infinite;
+  --animate-float:       float 5s ease-in-out infinite;
+  --animate-ripple:      ripple 0.6s ease-out forwards;
+  --animate-caustic:     caustic-flow 25s linear infinite;
+  --animate-fade-in:     fade-in 0.5s ease-out forwards;
+  --animate-slide-up:    slide-up 0.5s ease-out forwards;
+  --animate-slide-down:  slide-down 0.25s ease-out forwards;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+@keyframes wave {
+  0%,100% { transform: translateX(0)    translateY(0)     scaleY(1);    }
+  25%      { transform: translateX(-2%) translateY(-10px) scaleY(1.04); }
+  50%      { transform: translateX(-4%) translateY(0)     scaleY(0.98); }
+  75%      { transform: translateX(-2%) translateY(10px)  scaleY(1.02); }
+}
+
+@keyframes bubble-rise {
+  0%   { transform: translateY(0)    scale(1);   opacity: 0.5; }
+  50%  { transform: translateY(-50px) scale(1.1); opacity: 0.25; }
+  100% { transform: translateY(-100px) scale(0.7); opacity: 0;   }
+}
+
+@keyframes glow-pulse {
+  0%,100% { opacity: 0.5; filter: blur(60px); }
+  50%     { opacity: 0.9; filter: blur(80px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0);   }
+  50%     { transform: translateY(-12px); }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0;   }
+}
+
+@keyframes caustic-flow {
+  0%   { transform: rotate(0deg)   scale(1);   }
+  50%  { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1);   }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #060E1A;
+  color: #E8F4FF;
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: #060E1A; }
+::-webkit-scrollbar-thumb { background: #1A3B5C; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #2A5A8A; }
+
+/* Text selection */
+::selection {
+  background: rgba(0, 174, 239, 0.25);
+  color: #E8F4FF;
+}
+
+/* Code areas */
+code, pre, kbd {
+  font-family: var(--font-geist-mono, 'JetBrains Mono', 'Fira Code', monospace);
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+/* Glass surfaces */
+.glass {
+  background: rgba(15, 34, 56, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(42, 90, 138, 0.25);
+}
+
+.glass-dark {
+  background: rgba(6, 14, 26, 0.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(26, 59, 92, 0.4);
+}
+
+.glass-bright {
+  background: rgba(22, 43, 74, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 174, 239, 0.2);
+}
+
+/* Glow effects */
+.glow-sm {
+  box-shadow: 0 0 12px rgba(0, 174, 239, 0.25);
+}
+
+.glow {
+  box-shadow:
+    0 0 20px rgba(0, 174, 239, 0.3),
+    0 0 60px rgba(0, 174, 239, 0.1);
+}
+
+.glow-lg {
+  box-shadow:
+    0 0 20px rgba(0, 174, 239, 0.5),
+    0 0 60px rgba(0, 174, 239, 0.25),
+    0 0 120px rgba(0, 174, 239, 0.1);
+}
+
+.glow-text {
+  text-shadow:
+    0 0 20px rgba(0, 174, 239, 0.7),
+    0 0 40px rgba(0, 174, 239, 0.4);
+}
+
+/* Shimmer effect for cards */
+.shimmer-card {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 174, 239, 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.5s linear infinite;
+}
+
+/* Ocean gradient backgrounds */
+.ocean-gradient {
+  background: linear-gradient(
+    180deg,
+    #020810 0%,
+    #060E1A 25%,
+    #0B1929 60%,
+    #0F2238 100%
+  );
+}
+
+.hero-gradient {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 174, 239, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(26, 110, 192, 0.1) 0%, transparent 60%),
+    linear-gradient(180deg, #020810 0%, #060E1A 40%, #0B1929 100%);
+}
+
+/* Divider line */
+.border-ocean {
+  border-color: rgba(42, 90, 138, 0.3);
+}
+
+/* Focus ring */
+.focus-ocean:focus-visible {
+  outline: 2px solid rgba(0, 174, 239, 0.6);
+  outline-offset: 2px;
+}
+
+/* Transition base */
+.transition-ocean {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
