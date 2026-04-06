@@ -31,11 +31,26 @@ export const metadata: Metadata = {
     "Professional async image generation API with wallet-based billing, token management, and S3 storage. Build powerful AI image apps in minutes.",
   keywords: ["image API", "image generation", "AI API", "async jobs", "developer API"],
   authors: [{ name: "SharkApi.dev" }],
+
+  icons: {
+    icon: [{ url: "/logo.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/logo.png",
+  },
+
   openGraph: {
     title: "SharkApi.dev — Image Generation API",
     description: "Professional async image generation API built for developers.",
     type: "website",
     siteName: "SharkApi.dev",
+    images: [{ url: "/og-image.png", width: 400, height: 400, alt: "SharkAPI" }],
+  },
+
+  twitter: {
+    card: "summary",
+    title: "SharkApi.dev — Image Generation API",
+    description: "Professional async image generation API built for developers.",
+    images: ["/og-image.png"],
   },
 };
 
