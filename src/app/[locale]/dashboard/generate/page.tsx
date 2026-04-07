@@ -9,13 +9,22 @@ type JobPhase = "idle" | "uploading" | "submitting" | "queued" | "processing" | 
 
 const COST: Record<Variant, number> = { "1k": 0.01, "2k": 0.02 };
 const POLL_INTERVAL_MS = 2500;
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ACCEPTED_MIME = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 interface JobOutput {
   file_url: string | null;
   text_content: string | null;
   output_type: string;
+}
+
+interface LibraryItem {
+  job_id: string;
+  prompt: string;
+  variant: string;
+  price_usd: number;
+  created_at: string;
+  image_url: string;
 }
 
 const PHASE_LABEL: Record<JobPhase, string> = {
@@ -44,11 +53,31 @@ export default function GeneratePage() {
   const [output, setOutput]     = useState<JobOutput | null>(null);
   const [jobError, setJobError] = useState<string | null>(null);
 
+  // Library
+  const [library, setLibrary]         = useState<LibraryItem[]>([]);
+  const [libraryLoading, setLibraryLoading] = useState(true);
+  const [lightbox, setLightbox]       = useState<LibraryItem | null>(null);
+
   const fileRef = useRef<HTMLInputElement>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const balance   = user?.walletBalance ?? 0;
   const canSubmit = balance >= COST[variant];
+
+  const fetchLibrary = useCallback(async () => {
+    try {
+      const res = await fetch("/api/playground/library");
+      if (!res.ok) return;
+      const data = await res.json();
+      setLibrary(data.items ?? []);
+    } catch { /* ignore */ } finally {
+      setLibraryLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLibrary();
+  }, [fetchLibrary]);
 
   const stopPolling = useCallback(() => {
     if (pollRef.current) {
@@ -75,6 +104,8 @@ export default function GeneratePage() {
         stopPolling();
         setOutput(data.output);
         setPhase("completed");
+        // Refresh library to include new image
+        fetchLibrary();
       } else if (data.status === "failed" || data.status === "cancelled") {
         stopPolling();
         setPhase("failed");
@@ -83,7 +114,7 @@ export default function GeneratePage() {
     } catch {
       // network hiccup — keep polling
     }
-  }, [stopPolling]);
+  }, [stopPolling, fetchLibrary]);
 
   useEffect(() => {
     return () => stopPolling();
@@ -120,7 +151,6 @@ export default function GeneratePage() {
     setOutput(null);
     setJobError(null);
 
-    // Step 1: upload image if selected
     let imageUrl: string | undefined;
     if (imgFile) {
       setPhase("uploading");
@@ -145,7 +175,6 @@ export default function GeneratePage() {
       }
     }
 
-    // Step 2: create job
     setPhase("submitting");
     try {
       const body: Record<string, unknown> = { prompt: prompt.trim(), variant };
@@ -351,6 +380,110 @@ export default function GeneratePage() {
                 : `Generate — $${COST[variant].toFixed(2)}`
               : "Insufficient balance"}
           </button>
+        </div>
+      )}
+
+      {/* ── Library ─────────────────────────────────────────────── */}
+      {(libraryLoading || library.length > 0) && (
+        <div className="pt-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold text-white uppercase tracking-widest">My Library</h2>
+            <span className="text-xs text-white/30">{library.length} images</span>
+          </div>
+
+          {libraryLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="aspect-square rounded-xl bg-ocean-800 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {library.map((item) => (
+                <button
+                  key={item.job_id}
+                  onClick={() => setLightbox(item)}
+                  className="group relative aspect-square rounded-xl overflow-hidden border border-ocean-600/40 hover:border-electric-400/40 transition-all"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.image_url}
+                    alt={item.prompt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-ocean-900/0 group-hover:bg-ocean-900/60 transition-all duration-200 flex flex-col justify-end p-2.5 opacity-0 group-hover:opacity-100">
+                    <p className="text-xs text-white line-clamp-2 leading-snug">{item.prompt}</p>
+                    <div className="flex items-center justify-between mt-1.5">
+                      <span className="text-xs text-white/50 font-mono">{item.variant.toUpperCase()}</span>
+                      <span className="text-xs text-aqua-400 font-bold">${item.price_usd.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ocean-900/90 backdrop-blur-sm"
+          onClick={() => setLightbox(null)}
+        >
+          <div
+            className="relative max-w-2xl w-full rounded-2xl overflow-hidden border border-ocean-600/60 bg-ocean-800 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close */}
+            <button
+              onClick={() => setLightbox(null)}
+              className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-ocean-900/80 text-white/60 hover:text-white hover:bg-ocean-700 transition-colors text-lg leading-none"
+            >
+              ×
+            </button>
+
+            {/* Image */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={lightbox.image_url} alt={lightbox.prompt} className="w-full" />
+
+            {/* Meta */}
+            <div className="p-5 space-y-3">
+              <p className="text-sm text-white/80 leading-relaxed">{lightbox.prompt}</p>
+              <div className="flex items-center gap-3 text-xs text-white/40">
+                <span className="font-mono font-bold text-white/60">{lightbox.variant.toUpperCase()}</span>
+                <span>·</span>
+                <span className="text-aqua-400 font-bold">${lightbox.price_usd.toFixed(2)}</span>
+                <span>·</span>
+                <span>{new Date(lightbox.created_at).toLocaleDateString()}</span>
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={() => {
+                    setPrompt(lightbox.prompt);
+                    setVariant(lightbox.variant as Variant);
+                    setLightbox(null);
+                    onReset();
+                    setPrompt(lightbox.prompt);
+                    setVariant(lightbox.variant as Variant);
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-electric-400 text-ocean-900 text-sm font-bold hover:bg-electric-300 transition-colors"
+                >
+                  Use this prompt
+                </button>
+                <a
+                  href={lightbox.image_url}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 rounded-xl border border-ocean-600/60 text-sm font-medium text-white/60 hover:text-white hover:bg-ocean-700 transition-colors"
+                >
+                  Download
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
