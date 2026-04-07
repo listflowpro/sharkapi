@@ -45,14 +45,37 @@ export async function processJobById(jobId: string): Promise<void> {
     return;
   }
 
+  // ── Resolve image: download Supabase Storage URLs to base64 ──
+  // Provider can't auth against private Supabase buckets — send base64 instead.
+  let resolvedImageUrl: string | undefined = job.input_data.image_url as string | undefined;
+  let resolvedImageB64: string | undefined = job.input_data.image     as string | undefined;
+
+  if (resolvedImageUrl && !resolvedImageB64) {
+    try {
+      const imgRes = await fetch(resolvedImageUrl);
+      if (imgRes.ok) {
+        const arrayBuf = await imgRes.arrayBuffer();
+        const contentType = imgRes.headers.get("content-type") ?? "image/png";
+        resolvedImageB64 = Buffer.from(arrayBuf).toString("base64");
+        resolvedImageUrl = undefined;
+        console.log(`[worker] downloaded image from storage (${contentType}, ${resolvedImageB64.length} b64 chars)`);
+      } else {
+        // If download fails, pass URL directly and let provider handle it
+        console.warn(`[worker] could not download image_url (HTTP ${imgRes.status}), passing URL to provider`);
+      }
+    } catch (fetchErr) {
+      console.warn(`[worker] image fetch error: ${(fetchErr as Error).message}, passing URL to provider`);
+    }
+  }
+
   // ── Call provider ────────────────────────────────────────────
   let providerResult: Awaited<ReturnType<typeof generateImage>>;
 
   try {
     providerResult = await generateImage({
       message:   String(job.input_data.prompt ?? ""),
-      image_url: job.input_data.image_url as string | undefined,
-      image:     job.input_data.image     as string | undefined,
+      image_url: resolvedImageUrl,
+      image:     resolvedImageB64,
     });
   } catch (err) {
     await service
