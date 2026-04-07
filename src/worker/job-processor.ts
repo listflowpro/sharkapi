@@ -45,26 +45,49 @@ export async function processJobById(jobId: string): Promise<void> {
     return;
   }
 
-  // ── Resolve image: download Supabase Storage URLs to base64 ──
-  // Provider can't auth against private Supabase buckets — send base64 instead.
+  // ── Resolve image: download from Supabase Storage using service client ──
+  // Bucket may be private — use signed URL via service role to get the file.
   let resolvedImageUrl: string | undefined = job.input_data.image_url as string | undefined;
   let resolvedImageB64: string | undefined = job.input_data.image     as string | undefined;
 
   if (resolvedImageUrl && !resolvedImageB64) {
     try {
-      const imgRes = await fetch(resolvedImageUrl);
-      if (imgRes.ok) {
-        const arrayBuf = await imgRes.arrayBuffer();
-        const contentType = imgRes.headers.get("content-type") ?? "image/png";
-        resolvedImageB64 = Buffer.from(arrayBuf).toString("base64");
-        resolvedImageUrl = undefined;
-        console.log(`[worker] downloaded image from storage (${contentType}, ${resolvedImageB64.length} b64 chars)`);
+      // Extract bucket + path from Supabase public URL
+      // URL format: https://<project>.supabase.co/storage/v1/object/public/<bucket>/<path>
+      const urlObj = new URL(resolvedImageUrl);
+      const match = urlObj.pathname.match(/\/storage\/v1\/object\/(?:public\/)?([^/]+)\/(.+)/);
+
+      if (match) {
+        const bucket = match[1];
+        const path   = match[2];
+
+        // Try downloading via service client (works for both public and private buckets)
+        const { data: fileData, error: dlError } = await service.storage
+          .from(bucket)
+          .download(path);
+
+        if (!dlError && fileData) {
+          const arrayBuf = await fileData.arrayBuffer();
+          resolvedImageB64 = Buffer.from(arrayBuf).toString("base64");
+          resolvedImageUrl = undefined;
+          console.log(`[worker] downloaded image via service client (${resolvedImageB64.length} b64 chars)`);
+        } else {
+          console.warn(`[worker] service client download failed: ${dlError?.message}`);
+        }
       } else {
-        // If download fails, pass URL directly and let provider handle it
-        console.warn(`[worker] could not download image_url (HTTP ${imgRes.status}), passing URL to provider`);
+        // Not a Supabase Storage URL — try plain fetch
+        const imgRes = await fetch(resolvedImageUrl);
+        if (imgRes.ok) {
+          const arrayBuf = await imgRes.arrayBuffer();
+          resolvedImageB64 = Buffer.from(arrayBuf).toString("base64");
+          resolvedImageUrl = undefined;
+          console.log(`[worker] downloaded external image (${resolvedImageB64.length} b64 chars)`);
+        } else {
+          console.warn(`[worker] external image fetch failed (HTTP ${imgRes.status})`);
+        }
       }
     } catch (fetchErr) {
-      console.warn(`[worker] image fetch error: ${(fetchErr as Error).message}, passing URL to provider`);
+      console.warn(`[worker] image resolve error: ${(fetchErr as Error).message}`);
     }
   }
 
