@@ -1,10 +1,23 @@
 /**
  * Background queue worker — run standalone with:
- *   tsx src/worker/queue-worker.ts
+ *   npm run worker
  *
  * Blocks on BRPOP, processes one job at a time, loops forever.
  * Errors are caught per-job so the worker never crashes.
  */
+
+// Load .env.local before anything else (Next.js convention, not loaded by Node)
+import { readFileSync } from "fs";
+import { resolve } from "path";
+try {
+  const lines = readFileSync(resolve(process.cwd(), ".env.local"), "utf-8").split("\n");
+  for (const line of lines) {
+    const m = line.match(/^([^#=][^=]*)=(.*)$/);
+    if (m && !process.env[m[1].trim()]) {
+      process.env[m[1].trim()] = m[2].trim();
+    }
+  }
+} catch { /* .env.local not present — rely on process env */ }
 
 import Redis from "ioredis";
 import { processJobById } from "./job-processor";
