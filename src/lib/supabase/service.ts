@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 // Service role client — server-side ONLY, never import in client components
 // Bypasses RLS for backend operations (job processing, transactions)
 export function createServiceClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !key) {
