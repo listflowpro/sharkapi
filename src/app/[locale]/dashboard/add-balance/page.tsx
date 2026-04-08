@@ -63,8 +63,8 @@ export default function AddBalancePage() {
     <div className="max-w-xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
-        <p className="text-sm text-gray-700 mt-0.5">{t("subtitle")}</p>
+        <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
+        <p className="text-sm text-white/60 mt-0.5">{t("subtitle")}</p>
       </div>
 
       {/* Current balance */}
@@ -124,13 +124,13 @@ export default function AddBalancePage() {
               {selected === amt && (
                 <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-electric-400" />
               )}
-              <p className={cn(
-                "text-3xl font-black",
-                selected === amt ? "text-electric-400" : "text-white group-hover:text-white"
-              )}>
+              <p className="text-3xl font-black text-white">
                 ${amt}
               </p>
-              <p className="text-sm text-white mt-1">
+              <p className={cn(
+                "text-sm mt-1",
+                selected === amt ? "text-electric-400" : "text-white/50"
+              )}>
                 {amt === 10  ? "~500 × 1K jobs" :
                  amt === 20  ? "~1000 × 1K jobs" :
                  amt === 50  ? "~2500 × 1K jobs" :

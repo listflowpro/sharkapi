@@ -6,15 +6,19 @@ import { createServiceClient } from "@/lib/supabase/service";
 export const config = { api: { bodyParser: false } };
 
 export async function POST(request: NextRequest) {
+  console.log("[stripe/webhook] received");
+
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
-    console.error("[stripe/webhook] STRIPE_WEBHOOK_SECRET not set");
+    console.error("[stripe/webhook] STRIPE_WEBHOOK_SECRET not set — check Vercel env vars");
     return NextResponse.json({ error: "Webhook secret not configured." }, { status: 500 });
   }
 
   // ── 1. Read raw body & verify signature ──────────────────────
   const rawBody = await request.text();
   const signature = request.headers.get("stripe-signature") ?? "";
+
+  console.log("[stripe/webhook] sig present:", !!signature, "body length:", rawBody.length);
 
   const stripe = getStripe();
   let event: ReturnType<typeof stripe.webhooks.constructEvent>;
@@ -25,6 +29,8 @@ export async function POST(request: NextRequest) {
     console.error("[stripe/webhook] signature verification failed:", (err as Error).message);
     return NextResponse.json({ error: "Invalid signature." }, { status: 400 });
   }
+
+  console.log("[stripe/webhook] event type:", event.type);
 
   // ── 2. Handle checkout.session.completed ────────────────────
   if (event.type !== "checkout.session.completed") {
