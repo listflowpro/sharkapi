@@ -6,6 +6,7 @@ import { useDashboardUser } from "@/components/dashboard/DashboardUserProvider";
 import type { Transaction, TransactionType } from "@/lib/types";
 
 const TYPE_COLORS: Record<TransactionType, string> = {
+  topup:      "bg-aqua-400/15 text-aqua-400 border-aqua-400/30",
   payment:    "bg-aqua-400/15 text-aqua-400 border-aqua-400/30",
   usage:      "bg-ocean-800/40 text-white/70 border-ocean-600/60",
   refund:     "bg-electric-400/15 text-electric-400 border-electric-400/30",
@@ -97,9 +98,9 @@ export function WalletClient({
                 </div>
                 <span className={cn(
                   "text-sm font-mono font-bold shrink-0",
-                  tx.type === "payment" || tx.type === "refund" ? "text-aqua-400" : "text-coral-400"
+                  tx.type === "topup" || tx.type === "payment" || tx.type === "refund" ? "text-aqua-400" : "text-coral-400"
                 )}>
-                  {tx.type === "payment" || tx.type === "refund" ? "+" : "-"}${Math.abs(Number(tx.amount_usd)).toFixed(4)}
+                  {tx.type === "topup" || tx.type === "payment" || tx.type === "refund" ? "+" : "-"}${Math.abs(Number(tx.amount_usd)).toFixed(4)}
                 </span>
               </div>
             ))}

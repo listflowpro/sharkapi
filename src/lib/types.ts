@@ -76,7 +76,7 @@ export interface JobOutput {
   created_at: string;
 }
 
-export type TransactionType = "usage" | "payment" | "refund" | "adjustment";
+export type TransactionType = "usage" | "topup" | "payment" | "refund" | "adjustment";
 export type TransactionStatus = "pending" | "paid" | "failed" | "refunded";
 
 export interface Transaction {

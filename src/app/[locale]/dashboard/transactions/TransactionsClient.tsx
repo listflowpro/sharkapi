@@ -5,13 +5,14 @@ import { cn } from "@/lib/utils";
 import type { Transaction, TransactionType } from "@/lib/types";
 
 const TYPE_COLORS: Record<TransactionType, string> = {
+  topup:      "bg-aqua-400/15 text-aqua-400 border-aqua-400/30",
   usage:      "bg-coral-400/15 text-coral-400 border-coral-400/30",
   payment:    "bg-aqua-400/15 text-aqua-400 border-aqua-400/30",
   refund:     "bg-electric-400/15 text-electric-400 border-electric-400/30",
   adjustment: "bg-amber-400/15 text-amber-400 border-amber-400/30",
 };
 
-const FILTERS = ["all", "usage", "payment", "refund", "adjustment"] as const;
+const FILTERS = ["all", "topup", "usage", "refund", "adjustment"] as const;
 type Filter = typeof FILTERS[number];
 
 export function TransactionsClient({ transactions }: { transactions: Transaction[] }) {

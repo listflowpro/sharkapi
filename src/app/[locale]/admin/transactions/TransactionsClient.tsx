@@ -6,13 +6,14 @@ import type { AdminTransaction } from "@/lib/admin-data";
 import type { TransactionType } from "@/lib/types";
 
 const TYPE_COLORS: Record<TransactionType, string> = {
+  topup:      "bg-aqua-400/15 text-aqua-400 border-aqua-400/30",
   payment:    "bg-aqua-400/15 text-aqua-400 border-aqua-400/30",
   usage:      "bg-white/5 text-white/50 border-white/10",
   refund:     "bg-electric-400/15 text-electric-400 border-electric-400/30",
   adjustment: "bg-amber-400/15 text-amber-400 border-amber-400/30",
 };
 
-const ALL_TYPES: Array<TransactionType | "all"> = ["all", "payment", "usage", "refund", "adjustment"];
+const ALL_TYPES: Array<TransactionType | "all"> = ["all", "topup", "usage", "refund", "adjustment"];
 
 export function TransactionsClient({ transactions }: { transactions: AdminTransaction[] }) {
   const [filter, setFilter] = useState<TransactionType | "all">("all");
@@ -30,7 +31,7 @@ export function TransactionsClient({ transactions }: { transactions: AdminTransa
 
       {/* Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {(["payment", "usage", "refund", "adjustment"] as TransactionType[]).map((type) => {
+        {(["topup", "usage", "refund", "adjustment"] as TransactionType[]).map((type) => {
           const count = transactions.filter((t) => t.type === type).length;
           const sum = transactions.filter((t) => t.type === type).reduce((s, t) => s + Number(t.amount_usd), 0);
           return (

@@ -6,6 +6,7 @@ import { useDashboardUser } from "@/components/dashboard/DashboardUserProvider";
 import { cn } from "@/lib/utils";
 
 const PRESETS = [10, 20, 50, 100];
+const MIN_CUSTOM = 10;
 
 export default function AddBalancePage() {
   const t = useTranslations("dashboard.addBalance");
@@ -15,15 +16,40 @@ export default function AddBalancePage() {
   const [custom, setCustom] = useState("");
   const [customError, setCustomError] = useState("");
   const [mode, setMode] = useState<"preset" | "custom">("preset");
+  const [loading, setLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
 
   const effectiveAmount = mode === "preset" ? selected : (parseInt(custom) || null);
 
   const validateCustom = (val: string) => {
     const num = parseInt(val);
     if (!val) { setCustomError(""); return; }
-    if (isNaN(num) || num < 10) { setCustomError("Minimum is $10"); return; }
+    if (isNaN(num) || num < MIN_CUSTOM) { setCustomError("Minimum is $10"); return; }
     if (num % 10 !== 0) { setCustomError("Must be a multiple of $10 (e.g. 10, 20, 30, 50...)"); return; }
     setCustomError("");
+  };
+
+  const handleProceed = async () => {
+    if (!canProceed || loading) return;
+    setCheckoutError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: effectiveAmount }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setCheckoutError(data.error ?? "Failed to start checkout.");
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setCheckoutError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCustomChange = (val: string) => {
@@ -163,19 +189,29 @@ export default function AddBalancePage() {
         <span className="inline-flex items-center justify-center px-2.5 py-1 rounded bg-orange-500 text-[10px] font-black text-white tracking-tight leading-none h-7">DISCOVER</span>
       </div>
 
+      {checkoutError && (
+        <p className="text-sm text-coral-400 text-center">{checkoutError}</p>
+      )}
+
       {/* CTA */}
       <button
-        disabled={!canProceed}
+        onClick={handleProceed}
+        disabled={!canProceed || loading}
         className={cn(
-          "w-full py-3.5 rounded-xl text-sm font-semibold transition-all duration-200",
-          canProceed
+          "w-full py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2",
+          canProceed && !loading
             ? "bg-electric-400 text-white hover:bg-electric-300 shadow-[0_0_24px_rgba(0,174,239,0.3)] cursor-pointer"
             : "bg-ocean-800/40 text-white cursor-not-allowed"
         )}
       >
-        {canProceed
-          ? `${t("proceed")} — $${effectiveAmount} USD`
-          : t("proceed")}
+        {loading && (
+          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        )}
+        {loading
+          ? "Redirecting to Stripe..."
+          : canProceed
+            ? `${t("proceed")} — $${effectiveAmount} USD`
+            : t("proceed")}
       </button>
 
       {/* Security note */}

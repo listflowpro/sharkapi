@@ -11,7 +11,7 @@ export default async function WalletPage() {
   const transactions = await getTransactions(supabase, 10);
 
   const totalTopUp = transactions
-    .filter((t) => t.type === "payment")
+    .filter((t) => t.type === "topup")
     .reduce((s, t) => s + Math.abs(Number(t.amount_usd)), 0);
 
   const totalCharged = transactions
