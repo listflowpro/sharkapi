@@ -151,6 +151,18 @@ export default function AddBalancePage() {
         ))}
       </div>
 
+      {/* Accepted cards */}
+      <div className="flex items-center justify-center gap-2">
+        <span className="text-xs text-white/40 mr-1">Accepted cards</span>
+        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded bg-white text-[11px] font-black tracking-tight text-blue-800 leading-none h-7">VISA</span>
+        <span className="inline-flex items-center gap-0.5 px-2 py-1 rounded bg-white h-7">
+          <span className="w-4 h-4 rounded-full bg-red-500" />
+          <span className="w-4 h-4 rounded-full bg-yellow-400 -ml-2" />
+        </span>
+        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded bg-blue-600 text-[10px] font-black text-white tracking-tight leading-none h-7">AMEX</span>
+        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded bg-orange-500 text-[10px] font-black text-white tracking-tight leading-none h-7">DISCOVER</span>
+      </div>
+
       {/* CTA */}
       <button
         disabled={!canProceed}
@@ -162,9 +174,24 @@ export default function AddBalancePage() {
         )}
       >
         {canProceed
-          ? `${t("proceed")} — $${effectiveAmount}`
+          ? `${t("proceed")} — $${effectiveAmount} USD`
           : t("proceed")}
       </button>
+
+      {/* Security note */}
+      <div className="rounded-xl border border-ocean-600/40 bg-ocean-800/30 p-4 flex items-start gap-3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-electric-400 shrink-0 mt-0.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+        </svg>
+        <div>
+          <p className="text-sm font-semibold text-white">Secure payment by Stripe</p>
+          <p className="text-xs text-white/50 mt-0.5">
+            Your payment is processed by Stripe, Inc. — a PCI DSS Level 1 certified provider.
+            We never store your card details. All transactions are encrypted via TLS.
+          </p>
+        </div>
+      </div>
+
       {canProceed && (
         <p className="text-center text-sm text-white">{t("stripeNote")}</p>
       )}

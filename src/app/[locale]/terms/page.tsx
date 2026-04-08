@@ -11,13 +11,16 @@ const TOC = [
   { id: "account",        label: "2. Account Registration" },
   { id: "api-usage",      label: "3. API Usage" },
   { id: "wallet",         label: "4. Wallet & Payments" },
-  { id: "acceptable-use", label: "5. Acceptable Use" },
-  { id: "ip",             label: "6. Intellectual Property" },
-  { id: "privacy",        label: "7. Privacy" },
-  { id: "disclaimers",    label: "8. Disclaimers" },
-  { id: "liability",      label: "9. Limitation of Liability" },
-  { id: "termination",    label: "10. Termination" },
-  { id: "governing-law",  label: "11. Governing Law" },
+  { id: "delivery",       label: "5. Service Delivery" },
+  { id: "refunds",        label: "6. Refund Policy" },
+  { id: "cancellation",   label: "7. Cancellation Policy" },
+  { id: "acceptable-use", label: "8. Acceptable Use" },
+  { id: "ip",             label: "9. Intellectual Property" },
+  { id: "privacy",        label: "10. Privacy" },
+  { id: "disclaimers",    label: "11. Disclaimers" },
+  { id: "liability",      label: "12. Limitation of Liability" },
+  { id: "termination",    label: "13. Termination" },
+  { id: "governing-law",  label: "14. Governing Law" },
 ];
 
 export default function TermsPage() {
@@ -88,7 +91,51 @@ export default function TermsPage() {
         ]} />
       </LSection>
 
-      <LSection id="acceptable-use" title="5. Acceptable Use">
+      <LSection id="delivery" title="5. Service Delivery">
+        <LP>
+          SharkApi.dev is a digital API service. There are no physical goods shipped. Delivery
+          is electronic and instantaneous upon successful payment processing:
+        </LP>
+        <LList items={[
+          "Wallet top-ups are credited to your account immediately after Stripe confirms payment.",
+          "API image generation jobs are processed asynchronously and typically complete within 30–180 seconds.",
+          "Generated images are made available via the API response and your dashboard history.",
+          "The Service is accessible globally via HTTPS with no geographic delivery restrictions, except where prohibited by applicable law.",
+        ]} />
+      </LSection>
+
+      <LSection id="refunds" title="6. Refund Policy">
+        <LP>
+          All wallet top-ups are non-refundable once credited, except in the following circumstances:
+        </LP>
+        <LList items={[
+          "Duplicate charge: if you were charged more than once for the same top-up due to a technical error, we will refund the duplicate amount.",
+          "Unauthorized charge: if a charge was made without your authorization, contact us within 30 days and we will investigate and refund if confirmed.",
+          "Service unavailability: if the Service experiences extended downtime (more than 72 consecutive hours) and you are unable to use your credited balance, you may request a pro-rata refund of your unused balance.",
+          "Failed jobs are never charged — your wallet balance is only deducted on successful image generation.",
+        ]} />
+        <LP>
+          To request a refund, email{" "}
+          <a href="mailto:support@sharkapi.dev" className="text-electric-400 hover:underline">support@sharkapi.dev</a>{" "}
+          with your account email and transaction details. We respond within 5 business days.
+          Approved refunds are processed back to the original payment method within 5–10 business days.
+        </LP>
+      </LSection>
+
+      <LSection id="cancellation" title="7. Cancellation Policy">
+        <LP>
+          SharkApi.dev operates on a pre-paid wallet model — there are no recurring subscriptions
+          or automatic charges. You are never billed unless you explicitly initiate a wallet top-up.
+        </LP>
+        <LList items={[
+          "You may stop using the Service at any time without penalty.",
+          "Your account and any remaining wallet balance will remain accessible unless you request account deletion.",
+          "To permanently delete your account, contact support@sharkapi.dev. Any remaining balance is subject to our refund policy above.",
+          "We may suspend or terminate accounts that violate our Terms or Acceptable Use Policy, in which case unused balance may be forfeited.",
+        ]} />
+      </LSection>
+
+      <LSection id="acceptable-use" title="8. Acceptable Use">
         <LP>
           Your use of the Service must comply with our Acceptable Use Policy. You may not use the
           Service to generate content that is illegal, harmful, or violates the rights of others.
@@ -102,7 +149,7 @@ export default function TermsPage() {
         </LP>
       </LSection>
 
-      <LSection id="ip" title="6. Intellectual Property">
+      <LSection id="ip" title="9. Intellectual Property">
         <LP>
           You retain ownership of the prompts and input images you submit. You own the output
           images generated from your requests, subject to applicable law and these Terms.
@@ -118,7 +165,7 @@ export default function TermsPage() {
         ]} />
       </LSection>
 
-      <LSection id="privacy" title="7. Privacy">
+      <LSection id="privacy" title="10. Privacy">
         <LP>
           Your use of the Service is subject to our{" "}
           <a href="/privacy" className="text-electric-400 hover:underline">Privacy Policy</a>,
@@ -127,7 +174,7 @@ export default function TermsPage() {
         </LP>
       </LSection>
 
-      <LSection id="disclaimers" title="8. Disclaimers">
+      <LSection id="disclaimers" title="11. Disclaimers">
         <LP>
           THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND,
           EXPRESS OR IMPLIED. WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE,
@@ -139,7 +186,7 @@ export default function TermsPage() {
         </LP>
       </LSection>
 
-      <LSection id="liability" title="9. Limitation of Liability">
+      <LSection id="liability" title="12. Limitation of Liability">
         <LP>
           TO THE MAXIMUM EXTENT PERMITTED BY LAW, SHARKAPI.DEV SHALL NOT BE LIABLE FOR ANY
           INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF
@@ -152,7 +199,7 @@ export default function TermsPage() {
         </LP>
       </LSection>
 
-      <LSection id="termination" title="10. Termination">
+      <LSection id="termination" title="13. Termination">
         <LP>
           We may suspend or terminate your account at any time for violation of these Terms or our
           Acceptable Use Policy, with or without notice. Upon termination, your right to use the
@@ -164,7 +211,7 @@ export default function TermsPage() {
         </LP>
       </LSection>
 
-      <LSection id="governing-law" title="11. Governing Law">
+      <LSection id="governing-law" title="14. Governing Law">
         <LP>
           These Terms shall be governed by and construed in accordance with applicable law.
           Any disputes arising from these Terms shall be resolved through binding arbitration,

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { OceanBackground } from "@/components/effects/OceanBackground";
@@ -18,7 +17,7 @@ function ContactForm() {
   const [sent,    setSent]    = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => { setLoading(false); setSent(true); }, 1500);
@@ -124,6 +123,22 @@ export default function ContactPage() {
                     </div>
                   </Card>
                 ))}
+
+                {/* Address card */}
+                <Card variant="default" padding="md">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🏢</span>
+                    <div>
+                      <h3 className="font-semibold text-ocean-50 mb-1">Company Address</h3>
+                      <p className="text-sm text-ocean-300 leading-relaxed">
+                        FLUXNEXUS LLC<br />
+                        1209 Mountain Road Pl NE Ste 7236<br />
+                        Albuquerque, NM 87110<br />
+                        United States
+                      </p>
+                    </div>
+                  </div>
+                </Card>
 
                 {/* Shark mascot card */}
                 <Card variant="bordered" padding="md" className="relative overflow-hidden">

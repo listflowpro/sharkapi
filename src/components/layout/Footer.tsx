@@ -114,11 +114,35 @@ export function Footer() {
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-10 pt-6 border-t border-ocean-500/20 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-ocean-400">
-              © {year} SharkApi.dev. {t("copyright")}
-            </p>
-            <p className="text-xs text-ocean-400">{t("tagline2")}</p>
+          <div className="mt-10 pt-6 border-t border-ocean-500/20 space-y-4">
+            {/* Address + card logos row */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <p className="text-xs text-ocean-500 leading-relaxed">
+                <span className="text-ocean-400 font-medium">FLUXNEXUS LLC</span>
+                {" · "}1209 Mountain Road Pl NE Ste 7236, Albuquerque, NM 87110, USA
+              </p>
+              {/* Accepted card logos */}
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-xs text-ocean-500 mr-1">We accept</span>
+                {/* Visa */}
+                <span className="inline-flex items-center justify-center px-2 py-1 rounded bg-white text-[10px] font-black tracking-tight text-blue-800 leading-none h-6">VISA</span>
+                {/* Mastercard */}
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-1 rounded bg-white h-6">
+                  <span className="w-3.5 h-3.5 rounded-full bg-red-500 opacity-90" />
+                  <span className="w-3.5 h-3.5 rounded-full bg-yellow-400 opacity-90 -ml-1.5" />
+                </span>
+                {/* Amex */}
+                <span className="inline-flex items-center justify-center px-2 py-1 rounded bg-blue-600 text-[9px] font-black text-white tracking-tight leading-none h-6">AMEX</span>
+                {/* Discover */}
+                <span className="inline-flex items-center justify-center px-2 py-1 rounded bg-orange-500 text-[9px] font-black text-white tracking-tight leading-none h-6">DISC</span>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <p className="text-xs text-ocean-400">
+                © {year} SharkApi.dev — Operated by FLUXNEXUS LLC. {t("copyright")}
+              </p>
+              <p className="text-xs text-ocean-400">{t("tagline2")}</p>
+            </div>
           </div>
         </div>
       </div>

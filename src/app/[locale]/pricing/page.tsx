@@ -71,6 +71,11 @@ function PricingCards() {
       <GlowOrbs />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
 
+        {/* Currency note */}
+        <p className="text-center text-sm text-ocean-400 mb-8">
+          All prices are in <span className="text-white font-semibold">USD (US Dollars)</span>. Payments processed securely by Stripe.
+        </p>
+
         {/* Plans */}
         <div className="grid md:grid-cols-2 gap-8 mb-16">
           {plans.map(({ key, featured }) => (
