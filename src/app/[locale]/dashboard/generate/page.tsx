@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 type Variant = "1k" | "2k";
 type JobPhase = "idle" | "uploading" | "submitting" | "queued" | "processing" | "completed" | "failed";
 
-const COST: Record<Variant, number> = { "1k": 0.01, "2k": 0.02 };
+const COST: Record<Variant, number> = { "1k": 0.03, "2k": 0.05 };
 const POLL_INTERVAL_MS = 2500;
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ACCEPTED_MIME = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -349,19 +349,30 @@ export default function GeneratePage() {
           <div>
             <p className="text-sm font-bold text-white uppercase tracking-widest mb-2">Resolution</p>
             <div className="grid grid-cols-2 gap-3">
-              {(["1k", "2k"] as const).map((v) => (
-                <button key={v} onClick={() => setVariant(v)}
-                  className={cn(
-                    "relative p-4 rounded-xl border-2 text-left transition-all",
-                    variant === v ? "border-electric-400 bg-electric-400/10" : "border-ocean-600/60 bg-ocean-900/40 hover:border-ocean-400/60"
-                  )}
-                >
-                  {variant === v && <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-electric-400" />}
-                  <p className={cn("text-xl font-black", variant === v ? "text-electric-400" : "text-white")}>{v.toUpperCase()}</p>
-                  <p className="text-xs text-white/50 mt-0.5">{v === "1k" ? "1024 x 1024" : "2048 x 2048"}</p>
-                  <p className={cn("text-sm font-bold mt-1.5", variant === v ? "text-electric-400" : "text-white/60")}>${COST[v].toFixed(2)}</p>
-                </button>
-              ))}
+              {(["1k", "2k"] as const).map((v) => {
+                const isComingSoon = v === "2k";
+                return (
+                  <button key={v} onClick={() => !isComingSoon && setVariant(v)}
+                    disabled={isComingSoon}
+                    className={cn(
+                      "relative p-4 rounded-xl border-2 text-left transition-all",
+                      isComingSoon
+                        ? "border-ocean-600/30 bg-ocean-900/20 cursor-not-allowed opacity-50"
+                        : variant === v ? "border-electric-400 bg-electric-400/10" : "border-ocean-600/60 bg-ocean-900/40 hover:border-ocean-400/60"
+                    )}
+                  >
+                    {!isComingSoon && variant === v && <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-electric-400" />}
+                    {isComingSoon && (
+                      <span className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-bold bg-ocean-600/60 text-white/40 border border-ocean-500/30">
+                        Soon
+                      </span>
+                    )}
+                    <p className={cn("text-xl font-black", !isComingSoon && variant === v ? "text-electric-400" : "text-white/50")}>{v.toUpperCase()}</p>
+                    <p className="text-xs text-white/30 mt-0.5">{v === "1k" ? "1024 x 1024" : "2048 x 2048"}</p>
+                    <p className={cn("text-sm font-bold mt-1.5", !isComingSoon && variant === v ? "text-electric-400" : "text-white/30")}>${COST[v].toFixed(2)}</p>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 /* ================================================================
    MOCK DATA — Phase 1 UI (replace with real API in Phase 4)
-   Pricing: 1K = $0.01 / request  ·  2K = $0.02 / request
+   Pricing: 1K = $0.03 / request  ·  2K = $0.05 / request
    ================================================================ */
 
 
@@ -42,13 +42,13 @@ export const mockTokens = [
 export type TxType = "top-up" | "charge" | "refund" | "adjustment" | "trial";
 export const mockTransactions = [
   { id: "txn_001", type: "top-up"     as TxType, amount: +20.00, status: "completed", desc: "Wallet top-up via Stripe",             jobId: null,          date: "Jan 20, 2025 · 14:32" },
-  { id: "txn_002", type: "charge"     as TxType, amount: -0.02,  status: "completed", desc: "Job job_8f2a9d3c — 2K mode",            jobId: "job_8f2a9d3c", date: "Jan 20, 2025 · 14:35" },
-  { id: "txn_003", type: "charge"     as TxType, amount: -0.01,  status: "completed", desc: "Job job_7e1b8c2d — 1K mode",            jobId: "job_7e1b8c2d", date: "Jan 19, 2025 · 09:15" },
+  { id: "txn_002", type: "charge"     as TxType, amount: -0.05,  status: "completed", desc: "Job job_8f2a9d3c — 2K mode",            jobId: "job_8f2a9d3c", date: "Jan 20, 2025 · 14:35" },
+  { id: "txn_003", type: "charge"     as TxType, amount: -0.03,  status: "completed", desc: "Job job_7e1b8c2d — 1K mode",            jobId: "job_7e1b8c2d", date: "Jan 19, 2025 · 09:15" },
   { id: "txn_004", type: "top-up"     as TxType, amount: +30.00, status: "completed", desc: "Wallet top-up via Stripe",             jobId: null,          date: "Jan 15, 2025 · 11:02" },
-  { id: "txn_005", type: "charge"     as TxType, amount: -0.01,  status: "completed", desc: "Job job_4b8a5919 — 1K mode",            jobId: "job_4b8a5919", date: "Jan 14, 2025 · 08:22" },
+  { id: "txn_005", type: "charge"     as TxType, amount: -0.03,  status: "completed", desc: "Job job_4b8a5919 — 1K mode",            jobId: "job_4b8a5919", date: "Jan 14, 2025 · 08:22" },
   { id: "txn_006", type: "trial"      as TxType, amount: 0,      status: "completed", desc: "Free trial generation (1 of 3)",        jobId: "job_5c9b6a2e", date: "Jan 15, 2025 · 10:00" },
-  { id: "txn_007", type: "charge"     as TxType, amount: -0.02,  status: "completed", desc: "Job job_3a7940e8 — 2K mode",            jobId: "job_3a7940e8", date: "Jan 13, 2025 · 17:09" },
-  { id: "txn_008", type: "refund"     as TxType, amount: +0.02,  status: "completed", desc: "Refund for failed job job_2b6830d7",    jobId: "job_2b6830d7", date: "Jan 12, 2025 · 12:44" },
+  { id: "txn_007", type: "charge"     as TxType, amount: -0.05,  status: "completed", desc: "Job job_3a7940e8 — 2K mode",            jobId: "job_3a7940e8", date: "Jan 13, 2025 · 17:09" },
+  { id: "txn_008", type: "refund"     as TxType, amount: +0.05,  status: "completed", desc: "Refund for failed job job_2b6830d7",    jobId: "job_2b6830d7", date: "Jan 12, 2025 · 12:44" },
   { id: "txn_009", type: "adjustment" as TxType, amount: +0.50,  status: "completed", desc: "Admin credit — service disruption",     jobId: null,          date: "Jan 10, 2025 · 09:00" },
   { id: "txn_010", type: "top-up"     as TxType, amount: +10.00, status: "completed", desc: "Wallet top-up via Stripe",             jobId: null,          date: "Jan 5, 2025 · 16:00"  },
 ];
@@ -56,12 +56,12 @@ export const mockTransactions = [
 /* ── Request History ────────────────────────────────────────── */
 export type JobStatus = "complete" | "failed" | "moderated" | "processing";
 export const mockJobs = [
-  { id: "job_8f2a9d3c", status: "complete"   as JobStatus, type: "text",       mode: "2k", prompt: "A great white shark in bioluminescent deep ocean, cinematic lighting, 8K",     cost: "$0.02", token: "production-backend", moderation: "passed",   date: "Jan 20, 2025 · 14:35", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=2K+Output" },
-  { id: "job_7e1b8c2d", status: "complete"   as JobStatus, type: "text",       mode: "1k", prompt: "Bioluminescent jellyfish, photorealistic, dark ocean background",              cost: "$0.01", token: "staging-env",        moderation: "passed",   date: "Jan 19, 2025 · 09:15", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=1K+Output" },
+  { id: "job_8f2a9d3c", status: "complete"   as JobStatus, type: "text",       mode: "2k", prompt: "A great white shark in bioluminescent deep ocean, cinematic lighting, 8K",     cost: "$0.05", token: "production-backend", moderation: "passed",   date: "Jan 20, 2025 · 14:35", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=2K+Output" },
+  { id: "job_7e1b8c2d", status: "complete"   as JobStatus, type: "text",       mode: "1k", prompt: "Bioluminescent jellyfish, photorealistic, dark ocean background",              cost: "$0.03", token: "staging-env",        moderation: "passed",   date: "Jan 19, 2025 · 09:15", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=1K+Output" },
   { id: "job_6d0a7b1c", status: "failed"     as JobStatus, type: "text+image", mode: "2k", prompt: "Transform this photo into watercolor painting style",                          cost: "$0.00", token: "production-backend", moderation: "passed",   date: "Jan 15, 2025 · 16:45", imageUrl: null },
   { id: "job_5c9b6a2e", status: "complete"   as JobStatus, type: "text",       mode: "1k", prompt: "Deep sea anglerfish glowing in the abyss (free trial)",                       cost: "$0.00", token: "—",                  moderation: "passed",   date: "Jan 15, 2025 · 10:00", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=Trial" },
-  { id: "job_4b8a5919", status: "complete"   as JobStatus, type: "text",       mode: "1k", prompt: "Octopus with glowing tentacles, ultra-detailed, underwater photography",       cost: "$0.01", token: "production-backend", moderation: "passed",   date: "Jan 14, 2025 · 08:22", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=1K+Output" },
-  { id: "job_3a7940e8", status: "complete"   as JobStatus, type: "text",       mode: "2k", prompt: "Shark silhouette against sunlit ocean surface, minimalist art style",          cost: "$0.02", token: "staging-env",        moderation: "passed",   date: "Jan 13, 2025 · 17:09", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=2K+Output" },
+  { id: "job_4b8a5919", status: "complete"   as JobStatus, type: "text",       mode: "1k", prompt: "Octopus with glowing tentacles, ultra-detailed, underwater photography",       cost: "$0.03", token: "production-backend", moderation: "passed",   date: "Jan 14, 2025 · 08:22", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=1K+Output" },
+  { id: "job_3a7940e8", status: "complete"   as JobStatus, type: "text",       mode: "2k", prompt: "Shark silhouette against sunlit ocean surface, minimalist art style",          cost: "$0.05", token: "staging-env",        moderation: "passed",   date: "Jan 13, 2025 · 17:09", imageUrl: "https://placehold.co/800x800/0B1929/00AEEF?text=2K+Output" },
   { id: "job_2b6830d7", status: "failed"     as JobStatus, type: "text",       mode: "2k", prompt: "Neon-lit coral reef at night, macro photography, HDR",                        cost: "$0.00", token: "production-backend", moderation: "passed",   date: "Jan 12, 2025 · 12:40", imageUrl: null },
   { id: "job_1a572ec6", status: "moderated"  as JobStatus, type: "text",       mode: "1k", prompt: "[content removed]",                                                            cost: "$0.00", token: "old-project",        moderation: "blocked",  date: "Jan 10, 2025 · 06:13", imageUrl: null },
 ];

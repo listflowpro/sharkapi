@@ -189,7 +189,7 @@ export function AnimatedHero() {
     `  -H "Authorization: Bearer sk_live_••••••••" \\`,
     `  -H "Content-Type: application/json" \\`,
     `  -d '{`,
-    `    "mode": "2k",`,
+    `    "mode": "1k",`,
     `    "prompt": "Deep ocean shark, cinematic, 8K"`,
     `  }'`,
   ].join("\n");
@@ -198,7 +198,7 @@ export function AnimatedHero() {
     `{`,
     `  "job_id": "job_8f2a9d3c",`,
     `  "status": "queued",`,
-    `  "estimated_cost": "$0.02",`,
+    `  "estimated_cost": "$0.03",`,
     `  "poll_url": "/v1/jobs/job_8f2a9d3c"`,
     `}`,
   ].join("\n");

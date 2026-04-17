@@ -15,7 +15,7 @@ const CODE: Record<Lang, Record<Step, string>> = {
   -H "Authorization: Bearer sk_live_••••••••" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "mode": "2k",
+    "mode": "1k",
     "prompt": "Deep ocean shark, cinematic lighting, 8K"
   }'`,
     poll: `# Returns immediately — poll until status is "complete"
@@ -25,8 +25,8 @@ curl https://api.sharkapi.dev/v1/jobs/job_8f2a9d3c \\
   "job_id":    "job_8f2a9d3c",
   "status":    "complete",
   "image_url": "https://cdn.sharkapi.dev/out/job_8f2a9d3c.jpg",
-  "mode":      "2k",
-  "cost":      "$0.02",
+  "mode":      "1k",
+  "cost":      "$0.03",
   "created_at":"2024-01-15T10:23:44Z"
 }`,
   },
@@ -41,7 +41,7 @@ curl https://api.sharkapi.dev/v1/jobs/job_8f2a9d3c \\
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      mode: "2k",
+      mode: "1k",
       prompt: "Deep ocean shark, cinematic lighting, 8K",
     }),
   }
@@ -66,7 +66,7 @@ console.log(job.image_url);
 // → "https://cdn.sharkapi.dev/out/job_8f2a9d3c.jpg"
 
 console.log(job.cost);
-// → "$0.02"`,
+// → "$0.03"`,
   },
 
   python: {
@@ -79,7 +79,7 @@ response = httpx.post(
         "Content-Type": "application/json",
     },
     json={
-        "mode": "2k",
+        "mode": "1k",
         "prompt": "Deep ocean shark, cinematic lighting, 8K",
     },
 )
@@ -103,7 +103,7 @@ print(job["image_url"])
 # → "https://cdn.sharkapi.dev/out/job_8f2a9d3c.jpg"
 
 print(job["cost"])
-# → "$0.02"`,
+# → "$0.03"`,
   },
 };
 

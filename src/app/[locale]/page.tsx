@@ -50,8 +50,8 @@ function HowItWorks() {
 function PricingPreview() {
   const t = useTranslations("pricing");
   const plans = [
-    { mode: "1K Mode", price: "$0.01", res: "1024 × 1024", featured: false },
-    { mode: "2K Mode", price: "$0.02", res: "2048 × 2048", featured: true  },
+    { mode: "1K Mode", price: "$0.03", res: "1024 × 1024", featured: true,  comingSoon: false },
+    { mode: "2K Mode", price: "$0.05", res: "2048 × 2048", featured: false, comingSoon: true  },
   ];
   return (
     <section className="relative overflow-hidden">
@@ -66,10 +66,15 @@ function PricingPreview() {
           </div>
           <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {plans.map((plan) => (
-              <Card key={plan.mode} variant={plan.featured ? "bordered" : "elevated"} padding="lg" className="relative">
+              <Card key={plan.mode} variant={plan.featured ? "bordered" : "elevated"} padding="lg" className={`relative${plan.comingSoon ? " opacity-60" : ""}`}>
                 {plan.featured && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <Badge variant="info">{t("mostPopular")}</Badge>
+                  </div>
+                )}
+                {plan.comingSoon && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <Badge variant="default">Coming Soon</Badge>
                   </div>
                 )}
                 <div className="text-center">
@@ -79,7 +84,7 @@ function PricingPreview() {
                   <Badge variant="default" size="sm">{plan.res}</Badge>
                 </div>
                 <GlowLine className="mt-6 mb-4" />
-                <Button variant={plan.featured ? "primary" : "secondary"} className="w-full">{t("cta")}</Button>
+                <Button variant={plan.featured ? "primary" : "secondary"} className="w-full" disabled={plan.comingSoon}>{plan.comingSoon ? "Coming Soon" : t("cta")}</Button>
               </Card>
             ))}
           </div>

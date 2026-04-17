@@ -53,8 +53,8 @@
       "subtitle": "No subscriptions. No hidden fees. Load your wallet and pay per generation. Failed jobs are always free."
     },
     "modes": {
-      "1k": { "name": "1K Mode", "res": "1024 × 1024", "price": "$0.01", "desc": "Fast standard resolution. Great for prototyping, thumbnails, and high-volume use cases." },
-      "2k": { "name": "2K Mode", "res": "2048 × 2048", "price": "$0.02", "desc": "High-resolution output. Ideal for print, detailed renders, and premium applications." }
+      "1k": { "name": "1K Mode", "res": "1024 × 1024", "price": "$0.03", "desc": "Fast standard resolution. Great for prototyping, thumbnails, and high-volume use cases." },
+      "2k": { "name": "2K Mode", "res": "2048 × 2048", "price": "$0.05", "desc": "High-resolution output. Ideal for print, detailed renders, and premium applications. Coming soon." }
     },
     "features": {
       "title": "What's included",
@@ -89,7 +89,7 @@
         "q3": { "q": "What happens if my job fails?",         "a": "Nothing. Failed jobs — due to timeouts, server errors, or moderation blocks — do not deduct any balance from your wallet." },
         "q4": { "q": "Can I get a refund?",                   "a": "Wallet balance is generally non-refundable. For exceptional cases, please contact our support team and we'll review your request." },
         "q5": { "q": "Does my balance expire?",               "a": "No. Your wallet balance never expires. Top up once, use it whenever you need." },
-        "q6": { "q": "What is the difference between modes?", "a": "1K mode generates 1024×1024 images at $0.01 per request. 2K mode generates 2048×2048 images at $0.02 per request. Both use the same underlying model." }
+        "q6": { "q": "What is the difference between modes?", "a": "1K mode generates 1024×1024 images at $0.03 per request. 2K mode (coming soon) will generate 2048×2048 images at $0.05 per request." }
       }
     },
     "cta": {

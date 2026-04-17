@@ -53,8 +53,8 @@
       "subtitle": "Abonelik yok. Gizli ücret yok. Cüzdanınızı doldurun, üretim başına ödeyin. Başarısız işler her zaman ücretsizdir."
     },
     "modes": {
-      "1k": { "name": "1K Mod", "res": "1024 × 1024", "price": "$0.01", "desc": "Hızlı standart çözünürlük. Prototipleme, küçük resimler ve yüksek hacimli kullanım için idealdir." },
-      "2k": { "name": "2K Mod", "res": "2048 × 2048", "price": "$0.02", "desc": "Yüksek çözünürlüklü çıktı. Baskı, detaylı render'lar ve premium uygulamalar için idealdir." }
+      "1k": { "name": "1K Mod", "res": "1024 × 1024", "price": "$0.03", "desc": "Hızlı standart çözünürlük. Prototipleme, küçük resimler ve yüksek hacimli kullanım için idealdir." },
+      "2k": { "name": "2K Mod", "res": "2048 × 2048", "price": "$0.05", "desc": "Yüksek çözünürlüklü çıktı. Baskı, detaylı render'lar ve premium uygulamalar için idealdir. Yakında kullanıma açılacak." }
     },
     "features": {
       "title": "Neler dahil?",
@@ -89,7 +89,7 @@
         "q3": { "q": "İşim başarısız olursa ne olur?",                    "a": "Hiçbir şey. Zaman aşımı, sunucu hataları veya moderasyon blokları nedeniyle başarısız olan işler cüzdanınızdan hiçbir bakiye düşürmez." },
         "q4": { "q": "Geri ödeme alabilir miyim?",                        "a": "Cüzdan bakiyesi genel olarak iade edilemez. İstisnai durumlarda lütfen destek ekibimizle iletişime geçin, talebinizi inceleyeceğiz." },
         "q5": { "q": "Bakiyem sona erer mi?",                             "a": "Hayır. Cüzdan bakiyeniz hiçbir zaman sona ermez. Bir kez yükleyin, istediğiniz zaman kullanın." },
-        "q6": { "q": "Modlar arasındaki fark nedir?",                     "a": "1K modu, istek başına $0.01 fiyatıyla 1024×1024 görüntüler üretir. 2K modu, istek başına $0.02 fiyatıyla 2048×2048 görüntüler üretir. Her ikisi de aynı temel modeli kullanır." }
+        "q6": { "q": "Modlar arasındaki fark nedir?",                     "a": "1K modu, istek başına $0.03 fiyatıyla 1024×1024 görüntüler üretir ve şu an aktif olan moddur. 2K modu, istek başına $0.05 fiyatıyla 2048×2048 görüntüler üretecek — yakında kullanıma açılacak." }
       }
     },
     "cta": {

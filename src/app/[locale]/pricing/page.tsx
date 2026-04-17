@@ -62,8 +62,8 @@ function PricingCards() {
   const tp = useTranslations("pricing");
 
   const plans = [
-    { key: "1k" as const, featured: false },
-    { key: "2k" as const, featured: true  },
+    { key: "1k" as const, featured: true,  comingSoon: false },
+    { key: "2k" as const, featured: false, comingSoon: true  },
   ];
 
   return (
@@ -78,16 +78,21 @@ function PricingCards() {
 
         {/* Plans */}
         <div className="grid md:grid-cols-2 gap-8 mb-16">
-          {plans.map(({ key, featured }) => (
+          {plans.map(({ key, featured, comingSoon }) => (
             <Card
               key={key}
               variant={featured ? "bordered" : "elevated"}
               padding="lg"
-              className="relative"
+              className={cn("relative", comingSoon ? "opacity-60" : "")}
             >
               {featured && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                   <Badge variant="info">{tp("mostPopular")}</Badge>
+                </div>
+              )}
+              {comingSoon && (
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <Badge variant="default">Coming Soon</Badge>
                 </div>
               )}
 
@@ -116,8 +121,9 @@ function PricingCards() {
                 variant={featured ? "primary" : "secondary"}
                 size="lg"
                 className="w-full"
+                disabled={comingSoon}
               >
-                {tp("cta")}
+                {comingSoon ? "Coming Soon" : tp("cta")}
               </Button>
             </Card>
           ))}
@@ -187,10 +193,10 @@ function WalletInfo() {
                       {amount}
                     </div>
                     <div className="text-xs text-ocean-400 mt-1">
-                      {amount === "$10"  && "1,000 × 1K"}
-                      {amount === "$20"  && "2,000 × 1K"}
-                      {amount === "$50"  && "5,000 × 1K"}
-                      {amount === "$100" && "10,000 × 1K"}
+                      {amount === "$10"  && "333 × 1K"}
+                      {amount === "$20"  && "666 × 1K"}
+                      {amount === "$50"  && "1,666 × 1K"}
+                      {amount === "$100" && "3,333 × 1K"}
                     </div>
                   </Card>
                 ))}
@@ -231,8 +237,8 @@ function UsageTable() {
 
           {/* Rows */}
           {USAGE_ROWS.map((count, i) => {
-            const cost1k = (count * 0.01).toFixed(2);
-            const cost2k = (count * 0.02).toFixed(2);
+            const cost1k = (count * 0.03).toFixed(2);
+            const cost2k = (count * 0.05).toFixed(2);
             return (
               <div
                 key={count}

@@ -131,10 +131,10 @@ export default function AddBalancePage() {
                 "text-sm mt-1",
                 selected === amt ? "text-electric-400" : "text-white/50"
               )}>
-                {amt === 10  ? "~500 × 1K jobs" :
-                 amt === 20  ? "~1000 × 1K jobs" :
-                 amt === 50  ? "~2500 × 1K jobs" :
-                               "~5000 × 1K jobs"}
+                {amt === 10  ? "~333 × 1K jobs" :
+                 amt === 20  ? "~666 × 1K jobs" :
+                 amt === 50  ? "~1666 × 1K jobs" :
+                               "~3333 × 1K jobs"}
               </p>
             </button>
           ))}
