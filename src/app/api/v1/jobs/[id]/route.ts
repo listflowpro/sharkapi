@@ -64,19 +64,23 @@ export async function GET(
     outputs = data ?? [];
   }
 
-  // ── 4. Response ──────────────────────────────────────────────
+  // ── 4. Build clean response ──────────────────────────────────
+  // image_url is surfaced at the top level when completed so clients
+  // don't need to dig into the outputs array.
+  const imageUrl = outputs.find((o) => o.output_type === "image")?.file_url ?? null;
+
   return NextResponse.json({
-    job_id: job.id,
-    status: job.status,
-    source: job.source,
-    model: job.model,
-    input: job.input_data,
-    pricing: job.pricing_snapshot,
-    error: job.error_message ?? null,
-    queued_at: job.queued_at,
-    started_at: job.started_at ?? null,
+    job_id:       job.id,
+    status:       job.status,
+    image_url:    imageUrl,
+    model:        job.model,
+    cost:         job.pricing_snapshot?.price_usd
+                    ? `$${Number(job.pricing_snapshot.price_usd).toFixed(2)}`
+                    : null,
+    error:        job.error_message ?? null,
+    queued_at:    job.queued_at,
+    started_at:   job.started_at ?? null,
     completed_at: job.completed_at ?? null,
-    created_at: job.created_at,
-    outputs: outputs.length > 0 ? outputs : null,
+    created_at:   job.created_at,
   });
 }

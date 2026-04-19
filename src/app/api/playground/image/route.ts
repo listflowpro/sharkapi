@@ -3,6 +3,7 @@ import { validateSession, isSessionError } from "@/lib/auth/validate-session";
 import { createServiceClient } from "@/lib/supabase/service";
 import { validateImageInput } from "@/lib/validation/image-input";
 import { enqueueJob } from "@/lib/queue/enqueue";
+import { uploadBase64Input, uploadUrlInput } from "@/lib/storage/upload-input";
 
 export async function POST(request: NextRequest) {
   // ── 1. Auth ──────────────────────────────────────────────────
@@ -67,10 +68,26 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // ── 5. Create job ────────────────────────────────────────────
+  // ── 5. Upload input image to our storage (if provided) ──────
+  let storedImageUrl: string | undefined;
+
+  if (image) {
+    const result = await uploadBase64Input(userId, image);
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
+    storedImageUrl = result.url;
+  } else if (image_url) {
+    const result = await uploadUrlInput(userId, image_url);
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
+    storedImageUrl = result.url;
+  }
+
+  // ── 6. Create job ────────────────────────────────────────────
   const inputData: Record<string, unknown> = { prompt, variant };
-  if (image_url) inputData.image_url = image_url;
-  if (image)     inputData.image     = image;
+  if (storedImageUrl) inputData.image_url = storedImageUrl;
 
   const { data: job, error: jobError } = await service
     .from("jobs")

@@ -5,6 +5,7 @@
 
 import { createServiceClient } from "@/lib/supabase/service";
 import { generateImage } from "@/lib/providers/dropthatship";
+import { uploadOutputFromUrl, uploadOutputFromBase64 } from "@/lib/storage/upload-output";
 
 export async function processJobById(jobId: string): Promise<void> {
   const service = createServiceClient();
@@ -112,25 +113,37 @@ export async function processJobById(jobId: string): Promise<void> {
     throw err;
   }
 
-  // ── Write output ─────────────────────────────────────────────
+  // ── Upload output to our storage (permanent URL) ─────────────
+  let permanentUrl: string;
+
   if (providerResult.type === "url") {
-    await service.from("job_outputs").insert({
-      job_id:       job.id,
-      output_type:  "image",
-      file_url:     providerResult.url,
-      text_content: null,
-      metadata:     { source: "dropthatship", response_type: "url" },
-    });
-  } else if (providerResult.type === "base64") {
-    const dataUri = `data:${providerResult.mimeType};base64,${providerResult.data}`;
-    await service.from("job_outputs").insert({
-      job_id:       job.id,
-      output_type:  "image",
-      file_url:     null,
-      text_content: dataUri,
-      metadata:     { source: "dropthatship", response_type: "base64", mime_type: providerResult.mimeType },
-    });
+    const upload = await uploadOutputFromUrl(job.user_id, job.id, providerResult.url);
+    if ("error" in upload) {
+      // Fallback: store provider URL directly rather than fail the job
+      console.warn(`[worker] output upload failed (${upload.error}) — using provider URL`);
+      permanentUrl = providerResult.url;
+    } else {
+      permanentUrl = upload.url;
+      console.log(`[worker] output stored at ${upload.path}`);
+    }
+  } else {
+    const upload = await uploadOutputFromBase64(job.user_id, job.id, providerResult.data, providerResult.mimeType);
+    if ("error" in upload) {
+      console.warn(`[worker] output upload failed (${upload.error}) — job will have no image`);
+      throw new Error(`Output storage failed: ${upload.error}`);
+    }
+    permanentUrl = upload.url;
+    console.log(`[worker] output stored at ${upload.path}`);
   }
+
+  // ── Write output record ───────────────────────────────────────
+  await service.from("job_outputs").insert({
+    job_id:       job.id,
+    output_type:  "image",
+    file_url:     permanentUrl,
+    text_content: null,
+    metadata:     { source: "dropthatship", response_type: providerResult.type },
+  });
 
   // ── Deduct wallet & record transaction ────────────────────────
   const { data: profile } = await service

@@ -36,8 +36,8 @@ export async function generateImage(input: ProviderRequest): Promise<ProviderRes
       },
       body: JSON.stringify({
         message: input.message,
-        ...(input.image_url ? { image_url: input.image_url } : {}),
-        ...(input.image     ? { image: input.image }         : {}),
+        model:   "gpt-4o",
+        ...(input.image ? { image: input.image } : {}),
       }),
       signal: controller.signal,
     });
@@ -80,14 +80,28 @@ function parseProviderResponse(body: unknown): ProviderResult | null {
   if (!body || typeof body !== "object") return null;
   const b = body as Record<string, unknown>;
 
-  // ── Try URL fields first ─────────────────────────────────────
+  // ── Primary: dropthatship returns { images: ["https://..."] } ──
+  if (Array.isArray(b.images)) {
+    for (const item of b.images) {
+      if (typeof item === "string" && isUrl(item)) {
+        return { type: "url", url: item, raw: body };
+      }
+      // Some providers nest: images: [{ url: "..." }]
+      if (item && typeof item === "object") {
+        const urlVal = (item as Record<string, unknown>).url;
+        if (typeof urlVal === "string" && isUrl(urlVal)) {
+          return { type: "url", url: urlVal, raw: body };
+        }
+      }
+    }
+  }
+
+  // ── Fallback: other URL fields ────────────────────────────────
   const urlCandidates = [
     b.url, b.image_url, b.output, b.result,
     (b.data as Record<string, unknown>)?.url,
     (b.data as Record<string, unknown>)?.image_url,
     Array.isArray(b.data) ? (b.data[0] as Record<string, unknown>)?.url : undefined,
-    Array.isArray(b.images) ? (b.images[0] as Record<string, unknown>)?.url : undefined,
-    Array.isArray(b.images) ? b.images[0] : undefined,
   ];
 
   for (const candidate of urlCandidates) {
@@ -96,13 +110,11 @@ function parseProviderResponse(body: unknown): ProviderResult | null {
     }
   }
 
-  // ── Try base64 fields ─────────────────────────────────────────
+  // ── Fallback: base64 fields ───────────────────────────────────
   const b64Candidates = [
-    { val: b.image,      mime: "image/png" },
-    { val: b.b64_json,   mime: "image/png" },
-    { val: b.base64,     mime: "image/png" },
-    { val: b.output,     mime: "image/png" },
-    { val: b.result,     mime: "image/png" },
+    { val: b.image,    mime: "image/png" },
+    { val: b.b64_json, mime: "image/png" },
+    { val: b.base64,   mime: "image/png" },
     Array.isArray(b.data)
       ? { val: (b.data[0] as Record<string, unknown>)?.b64_json, mime: "image/png" }
       : null,
@@ -112,7 +124,6 @@ function parseProviderResponse(body: unknown): ProviderResult | null {
     if (!entry) continue;
     const { val, mime } = entry;
     if (typeof val === "string" && looksLikeBase64(val)) {
-      // Strip data URI prefix if present
       const clean = val.replace(/^data:image\/[a-z+]+;base64,/, "");
       return { type: "base64", data: clean, mimeType: mime, raw: body };
     }
