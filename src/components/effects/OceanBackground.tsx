@@ -25,48 +25,33 @@ export function OceanBackground({
       {/* Base gradient — deep ocean floor */}
       <div className="absolute inset-0 ocean-gradient" />
 
-      {/* Glow orb 1 — top center, electric blue */}
+      {/* Glow orb 1 — top center (blur replaced with wider gradient) */}
       <div
         className="absolute pointer-events-none"
         style={{
-          top: "-10%",
-          left: "30%",
-          width: "60%",
-          height: "60%",
+          top: "-15%",
+          left: "20%",
+          width: "70%",
+          height: "70%",
           background:
-            "radial-gradient(ellipse, rgba(0,174,239,0.18) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(0,174,239,0.12) 0%, rgba(0,174,239,0.04) 50%, transparent 70%)",
           animation: "glow-pulse 4s ease-in-out infinite",
-          filter: "blur(40px)",
+          willChange: "opacity",
         }}
       />
 
-      {/* Glow orb 2 — bottom left, medium blue */}
+      {/* Glow orb 2 — bottom left */}
       <div
         className="absolute pointer-events-none"
         style={{
-          bottom: "0%",
-          left: "-10%",
-          width: "55%",
-          height: "55%",
+          bottom: "-5%",
+          left: "-15%",
+          width: "65%",
+          height: "65%",
           background:
-            "radial-gradient(ellipse, rgba(26,110,192,0.15) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(26,110,192,0.10) 0%, rgba(26,110,192,0.03) 50%, transparent 70%)",
           animation: "glow-pulse 6s ease-in-out infinite reverse",
-          filter: "blur(50px)",
-        }}
-      />
-
-      {/* Glow orb 3 — bottom right, subtle */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          bottom: "10%",
-          right: "-5%",
-          width: "45%",
-          height: "45%",
-          background:
-            "radial-gradient(ellipse, rgba(0,153,204,0.1) 0%, transparent 70%)",
-          animation: "glow-pulse 8s ease-in-out infinite",
-          filter: "blur(60px)",
+          willChange: "opacity",
         }}
       />
 
@@ -110,9 +95,9 @@ export function OceanBackground({
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 50% 30% at 50% 10%, rgba(0,174,239,0.12) 0%, transparent 70%)",
+              "radial-gradient(ellipse 60% 40% at 50% 5%, rgba(0,174,239,0.09) 0%, rgba(0,174,239,0.02) 60%, transparent 70%)",
             animation: "glow-pulse 5s ease-in-out infinite",
-            filter: "blur(20px)",
+            willChange: "opacity",
           }}
         />
       )}

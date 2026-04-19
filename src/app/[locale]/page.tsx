@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AnimatedHero } from "@/components/hero/AnimatedHero";
+import { ShowcaseGallery } from "@/components/home/ShowcaseGallery";
 
 /* ========================================================
    HOW IT WORKS
@@ -221,6 +222,7 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <AnimatedHero />
+        <ShowcaseGallery />
         <HowItWorks />
         <PricingPreview />
         <FeatureGrid />

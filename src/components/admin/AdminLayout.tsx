@@ -12,6 +12,7 @@ const NAV = [
   { href: "/admin/models",        label: "Models",        icon: "🧠" },
   { href: "/admin/providers",     label: "Providers",     icon: "🔌" },
   { href: "/admin/notifications", label: "Notifications", icon: "🔔" },
+  { href: "/admin/showcase",     label: "Showcase",      icon: "🖼️" },
 ];
 
 function NavItem({ href, label, icon }: { href: string; label: string; icon: string }) {

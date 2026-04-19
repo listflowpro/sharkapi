@@ -251,11 +251,7 @@ export function AnimatedHero() {
             opacity:        0.13,
             /* GPU compositing hints — avoids paint on every frame */
             willChange:     "opacity",
-            /* CSS drop-shadow: GPU-accelerated; follows SVG outline.
-               Replaces the removed feGaussianBlur SVG filters.     */
-            filter:
-              "drop-shadow(0 0 10px rgba(0,174,239,0.35))" +
-              " drop-shadow(0 0 30px rgba(0,174,239,0.12))",
+            filter: "drop-shadow(0 0 8px rgba(0,174,239,0.25))",
           }}
         >
           <SharkMouthLogo
@@ -294,8 +290,11 @@ export function AnimatedHero() {
                   <span className="text-ocean-100">{t("headline3")}</span>
                 </h1>
 
-                <p className="text-lg text-ocean-200 max-w-xl leading-relaxed">
+                <p className="text-2xl md:text-3xl font-semibold text-ocean-100 max-w-xl leading-snug">
                   {t("subtext")}
+                </p>
+                <p className="text-sm text-ocean-300 max-w-xl -mt-2">
+                  {t("subtextSub")}
                 </p>
 
                 <div className="flex flex-wrap gap-3">
