@@ -230,7 +230,8 @@ export function AnimatedHero() {
       <OceanBackground
         intensity="strong"
         caustics
-        className="relative min-h-screen flex flex-col"
+        className="relative flex flex-col"
+        style={{ minHeight: "calc(100vh - 240px)" }}
       >
 
         <BubbleField count={12} />
@@ -276,26 +277,32 @@ export function AnimatedHero() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
 
               {/* Headline + CTAs */}
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5">
                 <div className="flex items-center gap-3 flex-wrap">
                   <Badge variant="info" dot>{t("badge")}</Badge>
                   <Badge variant="active" dot size="sm">{t("badgeLive")}</Badge>
                 </div>
 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
-                  <span className="text-ocean-50">{t("headline1")}</span>
-                  <br />
-                  <span className="text-electric-400 glow-text">{t("headline2")}</span>
-                  <br />
-                  <span className="text-ocean-100">{t("headline3")}</span>
+                {/* Small API tagline above main headline */}
+                <p className="text-base text-ocean-300 font-mono tracking-wide">
+                  {t("headline1")} {t("headline2")} {t("headline3")}
+                </p>
+
+                {/* Main headline — the ocean slogan */}
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight">
+                  <span className="text-ocean-50">{t("subtext")}</span>
                 </h1>
 
-                <p className="text-2xl md:text-3xl font-semibold text-ocean-100 max-w-xl leading-snug">
-                  {t("subtext")}
-                </p>
-                <p className="text-sm text-ocean-300 max-w-xl -mt-2">
-                  {t("subtextSub")}
-                </p>
+                {/* Price — prominent */}
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl md:text-4xl font-black text-electric-400 glow-text">
+                    $0.03
+                  </span>
+                  <span className="text-ocean-200 text-base leading-snug">
+                    per image<br />
+                    <span className="text-ocean-400 text-sm">charged only on success</span>
+                  </span>
+                </div>
 
                 <div className="flex flex-wrap gap-3">
                   <SharkCTAButton
