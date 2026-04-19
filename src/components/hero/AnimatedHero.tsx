@@ -231,7 +231,7 @@ export function AnimatedHero() {
         intensity="strong"
         caustics
         className="relative flex flex-col"
-        style={{ minHeight: "calc(100vh - 240px)" }}
+        style={{ minHeight: "calc(100vh - 380px)" }}
       >
 
         <BubbleField count={12} />
@@ -290,7 +290,12 @@ export function AnimatedHero() {
 
                 {/* Main headline — the ocean slogan */}
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight">
-                  <span className="text-ocean-50">{t("subtext")}</span>
+                  <span className="text-ocean-50">An Ocean of the </span>
+                  <span className="text-electric-400 glow-text">Highest-Quality</span>
+                  <br />
+                  <span className="text-aqua-300"> Images </span>
+                  <span className="text-ocean-50">at the </span>
+                  <span className="text-electric-400 glow-text">Lowest Prices</span>
                 </h1>
 
                 {/* Price — prominent */}

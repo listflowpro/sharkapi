@@ -15,7 +15,7 @@ export async function ShowcaseGallery() {
   const strip = [...images, ...images];
 
   return (
-    <section className="bg-ocean-950 py-10 overflow-hidden relative">
+    <section className="bg-ocean-950 py-5 overflow-hidden relative">
       {/* Left fade */}
       <div
         className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
@@ -39,14 +39,14 @@ export async function ShowcaseGallery() {
           <div
             key={`${img.id}-${i}`}
             className="shrink-0 rounded-xl overflow-hidden border border-ocean-700/30"
-            style={{ width: 220, height: 220 }}
+            style={{ width: 180, height: 180 }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={img.url}
               alt={img.alt ?? "AI generated image"}
-              width={220}
-              height={220}
+              width={180}
+              height={180}
               loading="lazy"
               decoding="async"
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
