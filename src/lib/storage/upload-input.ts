@@ -45,12 +45,20 @@ export async function uploadBase64Input(
 
 /**
  * Download an external URL and upload to Supabase input-images bucket.
- * Rejects internal/private addresses (SSRF protection handled upstream).
+ * If the URL is already from our own Supabase project (e.g. playground-refs),
+ * it is returned as-is — the worker accesses it via service client anyway.
  */
 export async function uploadUrlInput(
   userId: string,
   url: string
 ): Promise<UploadInputResult> {
+  // Already our own Supabase storage — no need to re-upload.
+  // Worker uses service client which has full access regardless of bucket policy.
+  const ownBase = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL ?? "";
+  if (ownBase && url.startsWith(ownBase)) {
+    return { url, path: "" };
+  }
+
   let res: Response;
   try {
     res = await fetch(url, { signal: AbortSignal.timeout(30_000) });
