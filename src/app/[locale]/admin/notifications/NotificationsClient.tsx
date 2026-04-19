@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface TelegramConfig {
   id: string;
@@ -11,34 +11,63 @@ interface TelegramConfig {
 }
 
 export function NotificationsClient({ initialConfigs }: { initialConfigs: TelegramConfig[] }) {
-  const [configs, setConfigs]     = useState<TelegramConfig[]>(initialConfigs);
-  const [name, setName]           = useState("");
-  const [chatId, setChatId]       = useState("");
-  const [adding, setAdding]       = useState(false);
-  const [testing, setTesting]     = useState(false);
-  const [error, setError]         = useState<string | null>(null);
-  const [success, setSuccess]     = useState<string | null>(null);
+  const [configs, setConfigs]         = useState<TelegramConfig[]>(initialConfigs);
+  const [linking, setLinking]         = useState(false);
+  const [pendingToken, setPendingToken] = useState<string | null>(null);
+  const [testing, setTesting]         = useState(false);
+  const [webhookOk, setWebhookOk]     = useState<boolean | null>(null);
+  const [error, setError]             = useState<string | null>(null);
+  const [success, setSuccess]         = useState<string | null>(null);
+  const pollRef                       = useRef<ReturnType<typeof setInterval> | null>(null);
 
   function flash(msg: string, type: "ok" | "err") {
     if (type === "ok") { setSuccess(msg); setError(null); }
     else               { setError(msg);   setSuccess(null); }
-    setTimeout(() => { setSuccess(null); setError(null); }, 4000);
+    setTimeout(() => { setSuccess(null); setError(null); }, 5000);
   }
 
-  async function handleAdd() {
-    if (!name.trim() || !chatId.trim()) return;
-    setAdding(true);
-    const res = await fetch("/api/admin/telegram", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name.trim(), chat_id: chatId.trim() }),
-    });
+  const stopPolling = useCallback(() => {
+    if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
+    setPendingToken(null);
+    setLinking(false);
+  }, []);
+
+  // Poll until token is consumed (Telegram connected)
+  const startPolling = useCallback((token: string) => {
+    let attempts = 0;
+    pollRef.current = setInterval(async () => {
+      attempts++;
+      const res  = await fetch(`/api/admin/telegram/link?token=${token}`);
+      const json = await res.json();
+
+      if (json.status === "connected") {
+        stopPolling();
+        // Refresh configs list
+        const r2   = await fetch("/api/admin/telegram");
+        const data = await r2.json();
+        setConfigs(data.configs ?? []);
+        flash("Telegram başarıyla bağlandı! 🎉", "ok");
+      }
+
+      // Timeout after 3 minutes
+      if (attempts > 90) {
+        stopPolling();
+        flash("Süre doldu. Tekrar deneyin.", "err");
+      }
+    }, 2000);
+  }, [stopPolling]);
+
+  useEffect(() => () => stopPolling(), [stopPolling]);
+
+  async function handleConnect() {
+    setLinking(true);
+    const res  = await fetch("/api/admin/telegram/link", { method: "POST" });
     const json = await res.json();
-    setAdding(false);
-    if (!res.ok) { flash(json.error ?? "Hata oluştu.", "err"); return; }
-    setConfigs((prev) => [json.config, ...prev]);
-    setName(""); setChatId("");
-    flash("Telegram başarıyla eklendi.", "ok");
+    if (!res.ok) { setLinking(false); flash(json.error ?? "Hata oluştu.", "err"); return; }
+
+    setPendingToken(json.token);
+    window.open(json.url, "_blank");
+    startPolling(json.token);
   }
 
   async function handleToggle(id: string, current: boolean) {
@@ -52,7 +81,7 @@ export function NotificationsClient({ initialConfigs }: { initialConfigs: Telegr
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Bu Telegram bağlantısını silmek istediğinize emin misiniz?")) return;
+    if (!confirm("Bu Telegram bağlantısını silmek istiyor musunuz?")) return;
     const res = await fetch(`/api/admin/telegram/${id}`, { method: "DELETE" });
     if (!res.ok) { flash("Silme başarısız.", "err"); return; }
     setConfigs((prev) => prev.filter((c) => c.id !== id));
@@ -64,7 +93,14 @@ export function NotificationsClient({ initialConfigs }: { initialConfigs: Telegr
     const res = await fetch("/api/admin/telegram/test", { method: "POST" });
     setTesting(false);
     if (res.ok) flash("Test mesajı gönderildi! Telegramı kontrol edin.", "ok");
-    else        flash("Test mesajı gönderilemedi.", "err");
+    else        flash("Gönderim başarısız. Chat ID'leri kontrol edin.", "err");
+  }
+
+  async function handleSetupWebhook() {
+    const res  = await fetch("/api/admin/telegram/setup", { method: "POST" });
+    const data = await res.json();
+    if (data.ok) { setWebhookOk(true); flash("Webhook kaydedildi ✅", "ok"); }
+    else         { flash(`Webhook hatası: ${data.description ?? "bilinmiyor"}`, "err"); }
   }
 
   const active = configs.filter((c) => c.is_active).length;
@@ -78,7 +114,7 @@ export function NotificationsClient({ initialConfigs }: { initialConfigs: Telegr
         </p>
       </div>
 
-      {/* Flash messages */}
+      {/* Flash */}
       {success && (
         <div className="px-4 py-3 rounded-lg bg-green-500/15 border border-green-500/30 text-green-400 text-sm">
           {success}
@@ -90,53 +126,58 @@ export function NotificationsClient({ initialConfigs }: { initialConfigs: Telegr
         </div>
       )}
 
-      {/* Add form */}
+      {/* Connect button */}
       <div className="rounded-xl border border-ocean-600/30 bg-ocean-900/40 p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-white">Yeni Telegram Ekle</h2>
-        <p className="text-xs text-white/40">
-          Botunuza <code className="text-electric-400">/start</code> yazın, ardından{" "}
-          <code className="text-electric-400">https://api.telegram.org/bot{"{TOKEN}"}/getUpdates</code>{" "}
-          adresinden Chat ID&apos;nizi öğrenin.
-        </p>
-        <div className="flex gap-3">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="İsim (ör: Ana Kanal)"
-            className="flex-1 px-3 py-2 rounded-lg bg-ocean-800/60 border border-ocean-600/40 text-sm text-white placeholder-white/30 focus:outline-none focus:border-electric-400/60"
-          />
-          <input
-            value={chatId}
-            onChange={(e) => setChatId(e.target.value)}
-            placeholder="Chat ID (ör: 123456789)"
-            className="flex-1 px-3 py-2 rounded-lg bg-ocean-800/60 border border-ocean-600/40 text-sm text-white placeholder-white/30 focus:outline-none focus:border-electric-400/60"
-          />
+        <div>
+          <h2 className="text-sm font-semibold text-white mb-1">Telegram Bağla</h2>
+          <p className="text-xs text-white/40">
+            Butona bas → Telegram açılır → Start'a bas → otomatik bağlanır.
+          </p>
         </div>
-        <div className="flex gap-3">
+
+        {!pendingToken ? (
           <button
-            onClick={handleAdd}
-            disabled={adding || !name.trim() || !chatId.trim()}
-            className="px-4 py-2 rounded-lg bg-electric-400 text-ocean-900 text-sm font-semibold disabled:opacity-40 hover:bg-electric-300 transition-colors"
+            onClick={handleConnect}
+            disabled={linking}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#229ED9] hover:bg-[#1a8bc4] text-white text-sm font-semibold transition-colors disabled:opacity-50"
           >
-            {adding ? "Ekleniyor…" : "Ekle"}
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.453l-2.95-.924c-.642-.204-.654-.642.136-.953l11.57-4.461c.537-.194 1.006.131.346.133z"/>
+            </svg>
+            Telegram&apos;ı Bağla
           </button>
-          {configs.length > 0 && (
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-ocean-700/50 border border-ocean-600/30">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-sm text-white/70">Telegram bekleniyor…</span>
+            </div>
+            <button
+              onClick={stopPolling}
+              className="text-xs text-white/40 hover:text-white/70 transition-colors"
+            >
+              İptal
+            </button>
+          </div>
+        )}
+
+        {/* Test + actions row */}
+        {configs.length > 0 && (
+          <div className="flex gap-3 pt-1 border-t border-ocean-700/40">
             <button
               onClick={handleTest}
               disabled={testing || active === 0}
               className="px-4 py-2 rounded-lg bg-ocean-700/60 border border-ocean-600/40 text-white/70 text-sm font-medium hover:text-white hover:bg-ocean-600/60 disabled:opacity-40 transition-colors"
             >
-              {testing ? "Gönderiliyor…" : "Test Gönder"}
+              {testing ? "Gönderiliyor…" : "Test Mesajı Gönder"}
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Config list */}
       {configs.length === 0 ? (
-        <p className="text-sm text-white/30 text-center py-8">
-          Henüz Telegram bağlantısı yok.
-        </p>
+        <p className="text-sm text-white/30 text-center py-8">Henüz bağlı Telegram yok.</p>
       ) : (
         <div className="space-y-2">
           {configs.map((c) => (
@@ -144,9 +185,14 @@ export function NotificationsClient({ initialConfigs }: { initialConfigs: Telegr
               key={c.id}
               className="flex items-center gap-3 px-4 py-3 rounded-xl border border-ocean-600/25 bg-ocean-900/30"
             >
+              <div className="w-8 h-8 rounded-full bg-[#229ED9]/20 border border-[#229ED9]/30 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-[#229ED9]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.46 14.453l-2.95-.924c-.642-.204-.654-.642.136-.953l11.57-4.461c.537-.194 1.006.131.346.133z"/>
+                </svg>
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">{c.name}</p>
-                <p className="text-xs text-white/40 font-mono">{c.chat_id}</p>
+                <p className="text-xs text-white/35 font-mono">chat_id: {c.chat_id}</p>
               </div>
               <span className={`text-xs font-bold px-2 py-0.5 rounded border ${
                 c.is_active
@@ -172,16 +218,16 @@ export function NotificationsClient({ initialConfigs }: { initialConfigs: Telegr
         </div>
       )}
 
-      {/* Notification events info */}
+      {/* Notification events */}
       <div className="rounded-xl border border-ocean-600/20 bg-ocean-900/20 p-5">
         <h2 className="text-sm font-semibold text-white mb-3">Gönderilen Bildirimler</h2>
         <ul className="space-y-2 text-sm text-white/50">
           {[
             { icon: "🆕", label: "Yeni kullanıcı kaydı" },
             { icon: "💳", label: "Cüzdan doldurma" },
-            { icon: "⚠️", label: "Düşük bakiye uyarısı (son job sonrası < $0.10)" },
-            { icon: "❌", label: "Job başarısız olduğunda" },
-            { icon: "📊", label: "Her akşam 22:00'de günlük özet (son 24 saat)" },
+            { icon: "⚠️", label: "Düşük bakiye (son job sonrası < $0.10)" },
+            { icon: "❌", label: "Job başarısız" },
+            { icon: "📊", label: "Her akşam 22:00 — günlük özet" },
           ].map((item) => (
             <li key={item.label} className="flex items-center gap-2">
               <span>{item.icon}</span>
@@ -190,6 +236,24 @@ export function NotificationsClient({ initialConfigs }: { initialConfigs: Telegr
           ))}
         </ul>
       </div>
+
+      {/* Webhook setup — advanced */}
+      <details className="rounded-xl border border-ocean-700/20 bg-ocean-900/10">
+        <summary className="px-4 py-3 text-xs text-white/30 cursor-pointer hover:text-white/50 transition-colors">
+          ⚙️ Gelişmiş — Webhook Kurulumu
+        </summary>
+        <div className="px-4 pb-4 space-y-3">
+          <p className="text-xs text-white/40">
+            İlk kurulumda veya URL değiştiğinde Telegram&apos;a webhook adresimizi bildirmek için bir kez tıklayın.
+          </p>
+          <button
+            onClick={handleSetupWebhook}
+            className="px-4 py-2 rounded-lg bg-ocean-700/60 border border-ocean-600/40 text-white/70 text-xs hover:text-white hover:bg-ocean-600/60 transition-colors"
+          >
+            {webhookOk ? "✅ Webhook Kayıtlı" : "Webhook'u Kaydet"}
+          </button>
+        </div>
+      </details>
     </div>
   );
 }
