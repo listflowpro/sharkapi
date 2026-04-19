@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/admin/users",        label: "Users",        icon: "👥" },
-  { href: "/admin/jobs",         label: "Jobs",         icon: "⚙️" },
-  { href: "/admin/transactions", label: "Transactions", icon: "💳" },
-  { href: "/admin/models",       label: "Models",       icon: "🧠" },
-  { href: "/admin/providers",    label: "Providers",    icon: "🔌" },
+  { href: "/admin/users",         label: "Users",         icon: "👥" },
+  { href: "/admin/jobs",          label: "Jobs",          icon: "⚙️" },
+  { href: "/admin/transactions",  label: "Transactions",  icon: "💳" },
+  { href: "/admin/models",        label: "Models",        icon: "🧠" },
+  { href: "/admin/providers",     label: "Providers",     icon: "🔌" },
+  { href: "/admin/notifications", label: "Notifications", icon: "🔔" },
 ];
 
 function NavItem({ href, label, icon }: { href: string; label: string; icon: string }) {

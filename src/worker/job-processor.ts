@@ -6,6 +6,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { generateImage } from "@/lib/providers/dropthatship";
 import { uploadOutputFromUrl, uploadOutputFromBase64 } from "@/lib/storage/upload-output";
+import { notifyLowBalance, notifyJobFailed } from "@/lib/notifications/telegram";
 
 export async function processJobById(jobId: string): Promise<void> {
   const service = createServiceClient();
@@ -110,6 +111,7 @@ export async function processJobById(jobId: string): Promise<void> {
         completed_at:  now(),
       })
       .eq("id", job.id);
+    notifyJobFailed(job.user_id, job.id, String(err)).catch(() => {});
     throw err;
   }
 
@@ -177,4 +179,16 @@ export async function processJobById(jobId: string): Promise<void> {
     .eq("id", job.id);
 
   console.log(`[worker] job ${jobId} completed ($${priceUsd})`);
+
+  // Notify if balance dropped below $0.10 (fire-and-forget)
+  if (newBalance < 0.10) {
+    service
+      .from("profiles")
+      .select("email")
+      .eq("id", job.user_id)
+      .single()
+      .then(({ data: p }) => {
+        notifyLowBalance(p?.email ?? job.user_id, newBalance).catch(() => {});
+      });
+  }
 }

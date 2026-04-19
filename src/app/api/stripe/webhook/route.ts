@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { notifyWalletTopup } from "@/lib/notifications/telegram";
 
 // Disable body parsing — Stripe needs the raw body for signature verification
 export const config = { api: { bodyParser: false } };
@@ -97,5 +98,16 @@ export async function POST(request: NextRequest) {
   ]);
 
   console.log(`[stripe/webhook] credited $${amountUsd} to user ${userId} (session ${sessionId})`);
+
+  // Fetch email for notification (fire-and-forget)
+  service
+    .from("profiles")
+    .select("email")
+    .eq("id", userId)
+    .single()
+    .then(({ data: p }) => {
+      notifyWalletTopup(p?.email ?? userId, amountUsd, newBalance).catch(() => {});
+    });
+
   return NextResponse.json({ received: true });
 }
