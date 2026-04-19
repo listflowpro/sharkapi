@@ -377,6 +377,34 @@ export function AnimatedHero() {
           </div>
         </div>
 
+        {/* Scroll indicator */}
+        <div className="flex justify-center pb-4 pt-2">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "4px",
+              animation: "scroll-bounce 1.6s ease-in-out infinite",
+              opacity: 0.5,
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M4 6l6 6 6-6" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ marginTop: "-10px", opacity: 0.5 }}>
+              <path d="M4 6l6 6 6-6" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <style>{`
+          @keyframes scroll-bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.4; }
+            50%       { transform: translateY(6px); opacity: 0.8; }
+          }
+        `}</style>
+
         <WaveDivider variant="gentle" fillColor="#060E1A" />
       </OceanBackground>
       </div>
