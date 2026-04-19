@@ -31,7 +31,7 @@ const ON_THIS_PAGE = [
 
 const QUICKSTART = `# Step 1 — submit a job
 curl -X POST https://www.sharkapi.dev/api/v1/image \\
-  -H "Authorization: Bearer sk_live_••••••••" \\
+  -H "X-API-Key: sk_live_••••••••" \\
   -H "Content-Type: application/json" \\
   -d '{"prompt": "A great white shark in bioluminescent deep ocean, cinematic, 8K"}'
 
@@ -40,14 +40,14 @@ curl -X POST https://www.sharkapi.dev/api/v1/image \\
 
 # Step 2 — poll every 2 seconds until completed
 curl https://www.sharkapi.dev/api/v1/jobs/3a8f2c1d-... \\
-  -H "Authorization: Bearer sk_live_••••••••"
+  -H "X-API-Key: sk_live_••••••••"
 
 # → { "status": "completed", "image_url": "https://...supabase.co/.../generated-images/..." }`;
 
-const AUTH_HEADER = `Authorization: Bearer sk_live_your_token_here`;
+const AUTH_HEADER = `X-API-Key: sk_live_your_token_here`;
 
 const GENERATE_CURL_TEXT = `curl -X POST https://www.sharkapi.dev/api/v1/image \\
-  -H "Authorization: Bearer sk_live_••••••••" \\
+  -H "X-API-Key: sk_live_••••••••" \\
   -H "Content-Type: application/json" \\
   -d '{
     "prompt": "A great white shark in bioluminescent deep ocean, cinematic, 8K",
@@ -67,7 +67,7 @@ IMAGE_B64=$(base64 -w 0 ./reference.jpg)   # Linux
 # IMAGE_B64=$(base64 -i ./reference.jpg)   # macOS
 
 curl -X POST https://www.sharkapi.dev/api/v1/image \\
-  -H "Authorization: Bearer sk_live_••••••••" \\
+  -H "X-API-Key: sk_live_••••••••" \\
   -H "Content-Type: application/json" \\
   -d "{
     \\"prompt\\": \\"Transform this into a watercolor painting\\",
@@ -75,7 +75,7 @@ curl -X POST https://www.sharkapi.dev/api/v1/image \\
   }"`;
 
 const IMAGE_URL_CURL = `curl -X POST https://www.sharkapi.dev/api/v1/image \\
-  -H "Authorization: Bearer sk_live_••••••••" \\
+  -H "X-API-Key: sk_live_••••••••" \\
   -H "Content-Type: application/json" \\
   -d '{
     "prompt": "Transform this into a watercolor painting",
@@ -83,7 +83,7 @@ const IMAGE_URL_CURL = `curl -X POST https://www.sharkapi.dev/api/v1/image \\
   }'`;
 
 const POLL_CURL = `curl https://www.sharkapi.dev/api/v1/jobs/3a8f2c1d-7b4e-4f9a-b2d6-1c5e8f3a9b7d \\
-  -H "Authorization: Bearer sk_live_••••••••"`;
+  -H "X-API-Key: sk_live_••••••••"`;
 
 const POLL_QUEUED = `{
   "job_id":       "3a8f2c1d-7b4e-4f9a-b2d6-1c5e8f3a9b7d",
@@ -147,7 +147,7 @@ async function generateImage(prompt, options = {}) {
   const res = await fetch(\`\${BASE_URL}/api/v1/image\`, {
     method: "POST",
     headers: {
-      "Authorization": \`Bearer \${SHARKAPI_KEY}\`,
+      "X-API-Key": SHARKAPI_KEY,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
@@ -164,7 +164,7 @@ async function generateImage(prompt, options = {}) {
 // 2. Poll until completed or failed
 async function waitForJob(jobId, timeoutMs = 180_000) {
   const url      = \`\${BASE_URL}/api/v1/jobs/\${jobId}\`;
-  const headers  = { "Authorization": \`Bearer \${SHARKAPI_KEY}\` };
+  const headers  = { "X-API-Key": SHARKAPI_KEY };
   const deadline = Date.now() + timeoutMs;
 
   while (Date.now() < deadline) {
@@ -209,7 +209,7 @@ BASE_URL     = "https://www.sharkapi.dev"
 def generate_image(prompt: str, image_path: str | None = None, image_url: str | None = None) -> dict:
     """Submit a generation job. Returns the job dict with job_id."""
     headers = {
-        "Authorization": f"Bearer {SHARKAPI_KEY}",
+        "X-API-Key": SHARKAPI_KEY,
         "Content-Type": "application/json",
     }
     body = {"prompt": prompt, "variant": "1k"}
@@ -229,7 +229,7 @@ def generate_image(prompt: str, image_path: str | None = None, image_url: str | 
 def wait_for_job(job_id: str, timeout: int = 180) -> dict:
     """Poll until completed or failed. Returns the completed job dict."""
     url      = f"{BASE_URL}/api/v1/jobs/{job_id}"
-    headers  = {"Authorization": f"Bearer {SHARKAPI_KEY}"}
+    headers  = {"X-API-Key": SHARKAPI_KEY}
     deadline = time.time() + timeout
 
     while time.time() < deadline:
@@ -269,7 +269,7 @@ BASE="https://www.sharkapi.dev"
 
 # 1. Submit job
 RESPONSE=$(curl -s -X POST "$BASE/api/v1/image" \\
-  -H "Authorization: Bearer $TOKEN" \\
+  -H "X-API-Key: $TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{"prompt":"A great white shark in bioluminescent deep ocean, cinematic, 8K"}')
 
@@ -279,7 +279,7 @@ echo "Job created: $JOB_ID"
 # 2. Poll every 2 seconds
 while true; do
   POLL=$(curl -s "$BASE/api/v1/jobs/$JOB_ID" \\
-    -H "Authorization: Bearer $TOKEN")
+    -H "X-API-Key: $TOKEN")
 
   STATUS=$(echo "$POLL" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
   echo "Status: $STATUS"
@@ -339,8 +339,8 @@ export default function DocsPage() {
       {/* ── Authentication ───────────────────────────────────── */}
       <H2 id="auth">Authentication</H2>
       <P>
-        Every request must include your API key as a Bearer token in the{" "}
-        <Code>Authorization</Code> header. Get your key from{" "}
+        Every request must include your API key in the{" "}
+        <Code>X-API-Key</Code> header. Get your key from{" "}
         <strong>Dashboard → API Tokens</strong>.
       </P>
       <CodeBlock code={AUTH_HEADER} lang="http" color="text-aqua-300" title="Required header" />
@@ -361,7 +361,7 @@ export default function DocsPage() {
       </div>
 
       <ParamTable rows={[
-        { name: "401 Unauthorized", type: "HTTP", desc: "Authorization header is missing or the key format is invalid." },
+        { name: "401 Unauthorized", type: "HTTP", desc: "X-API-Key header is missing or the key is invalid." },
         { name: "403 Forbidden",    type: "HTTP", desc: "Key exists but has been revoked, or account is suspended." },
       ]} />
 
@@ -443,7 +443,7 @@ export default function DocsPage() {
 
       <H3>Request headers</H3>
       <ParamTable rows={[
-        { name: "Authorization", type: "string", required: true,  desc: 'Your API key. Format: "Bearer sk_live_..."' },
+        { name: "X-API-Key", type: "string", required: true,  desc: 'Your API key. Example: "sk_live_..."' },
         { name: "Content-Type",  type: "string", required: true,  desc: '"application/json"' },
       ]} />
 
@@ -507,7 +507,7 @@ export default function DocsPage() {
 
       <H3>Request</H3>
       <ParamTable rows={[
-        { name: "Authorization", type: "string", required: true, desc: 'Bearer token. Format: "Bearer sk_live_..."' },
+        { name: "X-API-Key", type: "string", required: true, desc: 'Your API key. Example: "sk_live_..."' },
         { name: ":id (path)",    type: "string", required: true, desc: "The job_id from the POST response." },
       ]} />
       <CodeBlock code={POLL_CURL} lang="bash" title="Poll request" />
@@ -568,7 +568,7 @@ export default function DocsPage() {
       <div className="flex flex-col gap-2 mb-6">
         {[
           { status: "400", color: "text-coral-400",   desc: "Bad request — missing or invalid body fields (e.g. no prompt, both image and image_url sent, image too large)." },
-          { status: "401", color: "text-coral-400",   desc: "Unauthorized — Authorization header is missing or the key format is wrong." },
+          { status: "401", color: "text-coral-400",   desc: "Unauthorized — X-API-Key header is missing or the key is invalid." },
           { status: "402", color: "text-amber-400",   desc: "Payment required — wallet balance is below the cost of this request. Top up your account and retry." },
           { status: "403", color: "text-coral-400",   desc: "Forbidden — API key has been revoked or account is suspended." },
           { status: "404", color: "text-ocean-300",   desc: "Not found — job ID does not exist or belongs to a different account." },
