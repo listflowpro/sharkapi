@@ -11,6 +11,7 @@ const COST: Record<Variant, number> = { "1k": 0.03, "2k": 0.05 };
 const POLL_INTERVAL_MS = 2500;
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ACCEPTED_MIME = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const ESTIMATED_SECONDS = 120; // ~2 min expected generation time
 
 interface JobOutput {
   file_url: string | null;
@@ -58,8 +59,12 @@ export default function GeneratePage() {
   const [libraryLoading, setLibraryLoading] = useState(true);
   const [lightbox, setLightbox]       = useState<LibraryItem | null>(null);
 
-  const fileRef = useRef<HTMLInputElement>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [elapsed, setElapsed] = useState(0); // seconds since job queued
+
+  const fileRef    = useRef<HTMLInputElement>(null);
+  const pollRef    = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timerRef   = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startedRef = useRef<number>(0);
 
   const balance   = user?.walletBalance ?? 0;
   const canSubmit = balance >= COST[variant];
@@ -86,6 +91,22 @@ export default function GeneratePage() {
     }
   }, []);
 
+  const startTimer = useCallback(() => {
+    if (timerRef.current) return;
+    startedRef.current = Date.now();
+    setElapsed(0);
+    timerRef.current = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startedRef.current) / 1000));
+    }, 1000);
+  }, []);
+
+  const stopTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
   const pollStatus = useCallback(async (id: string) => {
     try {
       const res = await fetch(`/api/playground/jobs/${id}`);
@@ -102,12 +123,13 @@ export default function GeneratePage() {
         setPhase("processing");
       } else if (data.status === "completed") {
         stopPolling();
+        stopTimer();
         setOutput(data.output);
         setPhase("completed");
-        // Refresh library to include new image
         fetchLibrary();
       } else if (data.status === "failed" || data.status === "cancelled") {
         stopPolling();
+        stopTimer();
         setPhase("failed");
         setJobError(data.error ?? "Job failed.");
       }
@@ -117,8 +139,8 @@ export default function GeneratePage() {
   }, [stopPolling, fetchLibrary]);
 
   useEffect(() => {
-    return () => stopPolling();
-  }, [stopPolling]);
+    return () => { stopPolling(); stopTimer(); };
+  }, [stopPolling, stopTimer]);
 
   const handleFile = (file: File) => {
     if (!ACCEPTED_MIME.includes(file.type.toLowerCase())) {
@@ -194,6 +216,7 @@ export default function GeneratePage() {
       const id: string = data.job_id;
       setJobId(id);
       setPhase("queued");
+      startTimer();
       pollRef.current = setInterval(() => pollStatus(id), POLL_INTERVAL_MS);
     } catch {
       setPhase("failed");
@@ -203,6 +226,8 @@ export default function GeneratePage() {
 
   const onReset = () => {
     stopPolling();
+    stopTimer();
+    setElapsed(0);
     setPhase("idle");
     setPrompt("");
     clearImage();
@@ -229,21 +254,80 @@ export default function GeneratePage() {
         </div>
       </div>
 
-      {/* Loading */}
-      {isActive && (
-        <div className="rounded-2xl border border-electric-400/20 bg-ocean-800 p-12 flex flex-col items-center gap-5">
-          <div className="relative w-14 h-14">
-            <div className="w-14 h-14 rounded-full border-2 border-electric-400/20 border-t-electric-400 animate-spin" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-5 h-5 rounded-full bg-electric-400/15 animate-pulse" />
+      {/* Loading — progress bar */}
+      {isActive && (() => {
+        // Progress: linear up to 92%, slows to a crawl after that so it never hits 100%
+        const raw = Math.min(elapsed / ESTIMATED_SECONDS, 1);
+        const pct = raw < 0.85 ? raw : 0.85 + (raw - 0.85) * 0.15;
+        const displayPct = Math.round(pct * 100);
+        const remaining = Math.max(0, ESTIMATED_SECONDS - elapsed);
+        const isGenerating = phase === "queued" || phase === "processing";
+        const mins = Math.floor(remaining / 60);
+        const secs = remaining % 60;
+        const remainingStr = mins > 0
+          ? `~${mins}m ${secs}s remaining`
+          : `~${secs}s remaining`;
+
+        return (
+          <div className="rounded-2xl border border-electric-400/20 bg-ocean-800 p-8 space-y-6">
+            {/* Spinner + label */}
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative w-12 h-12">
+                <div className="w-12 h-12 rounded-full border-2 border-electric-400/20 border-t-electric-400 animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded-full bg-electric-400/15 animate-pulse" />
+                </div>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-semibold text-white">{PHASE_LABEL[phase]}</p>
+                {jobId && <p className="text-xs font-mono text-white/30 mt-0.5">{jobId.slice(0, 16)}…</p>}
+              </div>
             </div>
+
+            {/* Progress bar — only shown once job is actually queued/processing */}
+            {isGenerating && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white/40">Generating your image</span>
+                  <span className="text-electric-400 font-mono font-bold">{displayPct}%</span>
+                </div>
+
+                {/* Track */}
+                <div className="relative h-2 rounded-full bg-ocean-900/80 overflow-hidden">
+                  {/* Animated shimmer */}
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full transition-all duration-1000 ease-linear"
+                    style={{
+                      width: `${displayPct}%`,
+                      background: "linear-gradient(90deg, #0080b0, #00AEEF, #40cfff)",
+                    }}
+                  />
+                  {/* Moving glow dot */}
+                  <div
+                    className="absolute top-0 h-full w-8 transition-all duration-1000 ease-linear"
+                    style={{
+                      left: `calc(${displayPct}% - 16px)`,
+                      background: "linear-gradient(90deg, transparent, rgba(0,174,239,0.6), transparent)",
+                    }}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-xs text-white/30">
+                  <span>{elapsed}s elapsed</span>
+                  <span>{elapsed < ESTIMATED_SECONDS ? remainingStr : "almost done…"}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Info pill */}
+            {isGenerating && (
+              <p className="text-center text-xs text-white/25">
+                AI image generation takes 30 – 120 seconds. Please keep this tab open.
+              </p>
+            )}
           </div>
-          <div className="text-center space-y-1">
-            <p className="text-sm font-medium text-white">{PHASE_LABEL[phase]}</p>
-            {jobId && <p className="text-xs font-mono text-white/30">{jobId}</p>}
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Completed */}
       {phase === "completed" && output && (
