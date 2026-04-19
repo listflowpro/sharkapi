@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { DocsLayout } from "@/components/docs/DocsLayout";
 import {
   H1, H2, H3, P, Lead, CodeBlock, Callout, Endpoint, ParamTable, Code,
 } from "@/components/docs/DocsComponents";
 import { GlowLine } from "@/components/effects/WaveDivider";
 import { Badge } from "@/components/ui/Badge";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "API Documentation — SharkAPI",
@@ -300,7 +301,12 @@ done`;
 
 export default function DocsPage() {
   return (
-    <DocsLayout onThisPage={ON_THIS_PAGE}>
+    <>
+      <Navbar />
+      <div className="flex min-h-screen pt-16">
+        {/* Main content */}
+        <div className="flex-1 min-w-0 flex justify-center">
+          <main className="flex-1 px-6 md:px-10 py-10 max-w-3xl w-full">
       <Badge variant="info" className="mb-4">API Reference</Badge>
       <H1>SharkAPI Documentation</H1>
       <Lead>
@@ -618,6 +624,31 @@ export default function DocsPage() {
           </p>
         </div>
       </div>
-    </DocsLayout>
+          </main>
+
+          {/* Right "On this page" */}
+          <aside className="hidden xl:block w-56 shrink-0 py-10 pr-6">
+            <div className="sticky top-24">
+              <p className="text-[11px] font-semibold text-ocean-300 uppercase tracking-wider mb-3">
+                On this page
+              </p>
+              <ul className="flex flex-col gap-1.5">
+                {ON_THIS_PAGE.map((item) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      className="text-xs text-ocean-400 hover:text-electric-400 transition-colors duration-150"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }
