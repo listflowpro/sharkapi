@@ -35,7 +35,7 @@ export async function generateImage(input: ProviderRequest): Promise<ProviderRes
         "X-API-Key": apiKey,
       },
       body: JSON.stringify({
-        message: input.message,
+        message: input.message + ", sadece görsel cevap ver.",
         model:   "gpt-4o",
         ...(input.image ? { image: input.image } : {}),
       }),
