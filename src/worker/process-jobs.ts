@@ -6,7 +6,7 @@
  */
 
 import { createServiceClient } from "@/lib/supabase/service";
-import { generateImage } from "@/lib/providers/dropthatship";
+import { generateImage } from "@/lib/providers/listflow";
 
 const BATCH_SIZE = 5;
 
@@ -72,6 +72,7 @@ async function processOne(
 
   try {
     providerResult = await generateImage({
+      jobId:     job.id,
       message:   String(job.input_data.prompt ?? ""),
       image_url: job.input_data.image_url as string | undefined,
       image:     job.input_data.image     as string | undefined,
@@ -95,7 +96,7 @@ async function processOne(
       output_type:  "image",
       file_url:     providerResult.url,
       text_content: null,
-      metadata:     { source: "dropthatship", response_type: "url" },
+      metadata:     { source: "listflow", response_type: "url" },
     });
 
   } else if (providerResult.type === "base64") {
@@ -108,7 +109,7 @@ async function processOne(
       file_url:     null,
       text_content: dataUri,
       metadata:     {
-        source:        "dropthatship",
+        source:        "listflow",
         response_type: "base64",
         mime_type:     providerResult.mimeType,
       },

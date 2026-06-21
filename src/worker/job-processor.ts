@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from "@/lib/supabase/service";
-import { generateImage } from "@/lib/providers/dropthatship";
+import { generateImage } from "@/lib/providers/listflow";
 import { uploadOutputFromUrl, uploadOutputFromBase64 } from "@/lib/storage/upload-output";
 import { notifyLowBalance, notifyJobFailed } from "@/lib/notifications/telegram";
 
@@ -98,6 +98,7 @@ export async function processJobById(jobId: string): Promise<void> {
 
   try {
     providerResult = await generateImage({
+      jobId:     job.id,
       message:   String(job.input_data.prompt ?? ""),
       image_url: resolvedImageUrl,
       image:     resolvedImageB64,
@@ -144,7 +145,7 @@ export async function processJobById(jobId: string): Promise<void> {
     output_type:  "image",
     file_url:     permanentUrl,
     text_content: null,
-    metadata:     { source: "dropthatship", response_type: providerResult.type },
+    metadata:     { source: "listflow", response_type: providerResult.type },
   });
 
   // ── Deduct wallet & record transaction ────────────────────────
