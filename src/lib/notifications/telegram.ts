@@ -2,11 +2,29 @@ import { createServiceClient } from "@/lib/supabase/service";
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
-export async function sendTelegram(message: string): Promise<void> {
-  if (!BOT_TOKEN) {
-    console.warn("[telegram] TELEGRAM_BOT_TOKEN not set — skipping notification");
-    return;
+// Forward every notification to listflow's admin Telegram channel so all
+// FLUXNEXUS alerts land in one place. Uses the shared secret we already have
+// (LISTFLOW_API_SECRET) — no bot or chat of our own required.
+async function forwardToListflow(message: string): Promise<void> {
+  const secret = process.env.LISTFLOW_API_SECRET;
+  if (!secret) return;
+  try {
+    await fetch("https://listflow.pro/api/external/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${secret}` },
+      body: JSON.stringify({ text: message }),
+    });
+  } catch (err) {
+    console.error("[telegram] listflow forward failed:", (err as Error).message);
   }
+}
+
+export async function sendTelegram(message: string): Promise<void> {
+  // Primary channel: listflow admin Telegram (one place for everything).
+  await forwardToListflow(message);
+
+  // Also deliver to any chat connected directly in SharkAPI's own admin panel.
+  if (!BOT_TOKEN) return;
 
   const service = createServiceClient();
   const { data: configs } = await service
