@@ -421,7 +421,7 @@ export default function DocsPage() {
       </div>
       <div className="flex flex-col gap-2 mb-6 text-sm text-ocean-200">
         {[
-          "Minimum wallet load: $10. Only multiples of $10 accepted ($10, $20, $50, $100…).",
+          "Minimum wallet load: $50. Only multiples of $50 accepted ($50, $100, $200, $500…).",
           "Charged only on successful completion — failed or moderated jobs are always free.",
           "Wallet balance never expires.",
           "Payments processed securely via Stripe.",

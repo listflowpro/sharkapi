@@ -82,7 +82,7 @@ export default function TermsPage() {
           per successful generation. Failed jobs are never charged.
         </LP>
         <LList items={[
-          "Minimum wallet top-up is $10. Top-ups are only accepted in multiples of $10.",
+          "Minimum wallet top-up is $50. Top-ups are only accepted in multiples of $50.",
           "Payments are processed by Stripe and subject to Stripe's terms of service.",
           "Wallet balance is non-refundable except at our sole discretion.",
           "Wallet balance does not expire.",

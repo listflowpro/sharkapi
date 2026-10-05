@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateSession, isSessionError } from "@/lib/auth/validate-session";
 import { getStripe } from "@/lib/stripe/server";
 
-const MIN_AMOUNT = 10;
+const MIN_AMOUNT = 50;
 const MAX_AMOUNT = 10_000;
+const STEP = 50; // wallet is topped up in multiples of $50
 
 export async function POST(request: NextRequest) {
   // ── 1. Auth ──────────────────────────────────────────────────
@@ -22,9 +23,9 @@ export async function POST(request: NextRequest) {
   }
 
   const amount = Number(body.amount);
-  if (!Number.isInteger(amount) || amount < MIN_AMOUNT || amount > MAX_AMOUNT) {
+  if (!Number.isInteger(amount) || amount < MIN_AMOUNT || amount > MAX_AMOUNT || amount % STEP !== 0) {
     return NextResponse.json(
-      { error: `Amount must be a whole number between $${MIN_AMOUNT} and $${MAX_AMOUNT}.` },
+      { error: `Amount must be a multiple of $${STEP} between $${MIN_AMOUNT} and $${MAX_AMOUNT}.` },
       { status: 400 }
     );
   }

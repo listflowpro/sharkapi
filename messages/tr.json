@@ -32,7 +32,7 @@
     "steps": {
       "01": { "title": "Kayıt ol",       "desc": "Hesabınızı oluşturun ve anında 3 ücretsiz deneme üretimi kazanın." },
       "02": { "title": "Token al",        "desc": "İlk API tokenınız kayıtta otomatik oluşturulur. İstediğiniz zaman daha fazla ekleyin." },
-      "03": { "title": "Bakiye yükle",    "desc": "Cüzdanınıza minimum $10 yükleyin. Sadece başarılı işlerden ücret alınır." },
+      "03": { "title": "Bakiye yükle",    "desc": "Cüzdanınıza minimum $50 yükleyin. Sadece başarılı işlerden ücret alınır." },
       "04": { "title": "İstek gönder",    "desc": "Prompt, mod ve isteğe bağlı görsel ile /v1/generate'e POST isteği atın." },
       "05": { "title": "Durumu takip et", "desc": "Bir job_id alırsınız. Tamamlanana kadar /v1/jobs/:id'yi 2 saniyede bir sorgulayın." },
       "06": { "title": "Görseli al",      "desc": "S3 görüntü URL'sini alın. Cüzdan kesintisi yalnızca bu noktada kesinleşir." }
@@ -45,7 +45,7 @@
     "perRequest": "istek başına",
     "mostPopular": "En Popüler",
     "cta": "Başla",
-    "note": "Minimum cüzdan yükleme $10 · Yalnızca $10 katları kabul edilir"
+    "note": "Minimum cüzdan yükleme $50 · Yalnızca $50 katları kabul edilir"
   },
   "pricingPage": {
     "hero": {
@@ -72,8 +72,8 @@
     },
     "wallet": {
       "title": "Cüzdan yükleme nasıl çalışır?",
-      "rule1": "Minimum yükleme $10'dur",
-      "rule2": "Yalnızca $10 katları kabul edilir ($10, $20, $50, $100)",
+      "rule1": "Minimum yükleme $50'dir",
+      "rule2": "Yalnızca $50 katları kabul edilir ($50, $100, $200, $500)",
       "rule3": "Ödemeler Stripe ile işlenir",
       "rule4": "Bakiye sona ermez"
     },
@@ -86,7 +86,7 @@
       "title": "Sık sorulan sorular",
       "items": {
         "q1": { "q": "Ne zaman ücretlendirilirim?",                        "a": "Yalnızca bir iş başarıyla tamamlandığında ve bir image_url döndürüldüğünde. Bir iş başarısız olursa veya moderasyon tarafından reddedilirse cüzdanınıza dokunulmaz." },
-        "q2": { "q": "Minimum yükleme miktarı nedir?",                    "a": "Minimum cüzdan yükleme miktarı $10'dur. Yüklemeler yalnızca $10'un katları olarak kabul edilir (örn. $10, $20, $30, $50, $100)." },
+        "q2": { "q": "Minimum yükleme miktarı nedir?",                    "a": "Minimum cüzdan yükleme miktarı $50'dir. Yüklemeler yalnızca $50'nin katları olarak kabul edilir (örn. $50, $100, $150, $200, $500)." },
         "q3": { "q": "İşim başarısız olursa ne olur?",                    "a": "Hiçbir şey. Zaman aşımı, sunucu hataları veya moderasyon blokları nedeniyle başarısız olan işler cüzdanınızdan hiçbir bakiye düşürmez." },
         "q4": { "q": "Geri ödeme alabilir miyim?",                        "a": "Cüzdan bakiyesi genel olarak iade edilemez. İstisnai durumlarda lütfen destek ekibimizle iletişime geçin, talebinizi inceleyeceğiz." },
         "q5": { "q": "Bakiyem sona erer mi?",                             "a": "Hayır. Cüzdan bakiyeniz hiçbir zaman sona ermez. Bir kez yükleyin, istediğiniz zaman kullanın." },
@@ -330,15 +330,15 @@
     },
     "addBalance": {
       "title":             "Bakiye Ekle",
-      "subtitle":          "Cüzdanınızı doldurun. Minimum $10, sadece $10'ın katları kabul edilir.",
+      "subtitle":          "Cüzdanınızı doldurun. Minimum $50, sadece $50'nin katları kabul edilir.",
       "preset":            "Hızlı tutarlar",
       "custom":            "Özel tutar",
-      "customPlaceholder": "Tutar girin (örn. 30)",
+      "customPlaceholder": "Tutar girin (örn. 100)",
       "proceed":           "Stripe'a Geç",
       "stripeNote":        "Ödemeyi tamamlamak için Stripe'a yönlendirileceksiniz.",
       "rules": {
-        "min":      "Minimum yükleme: $10",
-        "multiple": "$10'ın katı olmalıdır",
+        "min":      "Minimum yükleme: $50",
+        "multiple": "$50'nin katı olmalıdır",
         "stripe":   "Stripe ile güvenli işlem"
       }
     },

@@ -5,14 +5,14 @@ import { useTranslations } from "next-intl";
 import { useDashboardUser } from "@/components/dashboard/DashboardUserProvider";
 import { cn } from "@/lib/utils";
 
-const PRESETS = [10, 20, 50, 100];
-const MIN_CUSTOM = 10;
+const PRESETS = [50, 100, 200, 500];
+const MIN_CUSTOM = 50;
 
 export default function AddBalancePage() {
   const t = useTranslations("dashboard.addBalance");
   const user = useDashboardUser();
   const balance = user.walletBalance ?? 0;
-  const [selected, setSelected] = useState<number | null>(20);
+  const [selected, setSelected] = useState<number | null>(100);
   const [custom, setCustom] = useState("");
   const [customError, setCustomError] = useState("");
   const [mode, setMode] = useState<"preset" | "custom">("preset");
@@ -24,8 +24,8 @@ export default function AddBalancePage() {
   const validateCustom = (val: string) => {
     const num = parseInt(val);
     if (!val) { setCustomError(""); return; }
-    if (isNaN(num) || num < MIN_CUSTOM) { setCustomError("Minimum is $10"); return; }
-    if (num % 10 !== 0) { setCustomError("Must be a multiple of $10 (e.g. 10, 20, 30, 50...)"); return; }
+    if (isNaN(num) || num < MIN_CUSTOM) { setCustomError("Minimum is $50"); return; }
+    if (num % 50 !== 0) { setCustomError("Must be a multiple of $50 (e.g. 50, 100, 150, 200...)"); return; }
     setCustomError("");
   };
 
@@ -57,7 +57,7 @@ export default function AddBalancePage() {
     validateCustom(val);
   };
 
-  const canProceed = effectiveAmount !== null && !customError && effectiveAmount >= 10 && effectiveAmount % 10 === 0;
+  const canProceed = effectiveAmount !== null && !customError && effectiveAmount >= 50 && effectiveAmount % 50 === 0;
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
@@ -131,10 +131,10 @@ export default function AddBalancePage() {
                 "text-sm mt-1",
                 selected === amt ? "text-electric-400" : "text-white/50"
               )}>
-                {amt === 10  ? "~333 × 1K jobs" :
-                 amt === 20  ? "~666 × 1K jobs" :
-                 amt === 50  ? "~1666 × 1K jobs" :
-                               "~3333 × 1K jobs"}
+                {amt === 50   ? "~1666 × 1K jobs" :
+                 amt === 100  ? "~3333 × 1K jobs" :
+                 amt === 200  ? "~6666 × 1K jobs" :
+                               "~16666 × 1K jobs"}
               </p>
             </button>
           ))}
@@ -150,8 +150,8 @@ export default function AddBalancePage() {
               value={custom}
               onChange={(e) => handleCustomChange(e.target.value)}
               placeholder={t("customPlaceholder")}
-              min={10}
-              step={10}
+              min={50}
+              step={50}
               className={cn(
                 "w-full pl-8 pr-4 py-3 rounded-xl bg-ocean-800 border text-white placeholder-ocean-500",
                 "focus:outline-none focus:ring-1 transition-all text-sm",

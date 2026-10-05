@@ -32,7 +32,7 @@
     "steps": {
       "01": { "title": "Sign up",       "desc": "Create your account and receive 3 free trial generations instantly." },
       "02": { "title": "Get token",     "desc": "Auto-generate your first API token on onboarding. Create more anytime." },
-      "03": { "title": "Add balance",   "desc": "Top up your wallet with $10 minimum. Only charged on successful jobs." },
+      "03": { "title": "Add balance",   "desc": "Top up your wallet with $50 minimum. Only charged on successful jobs." },
       "04": { "title": "Send request",  "desc": "POST to /v1/generate with your prompt, mode, and optional image." },
       "05": { "title": "Poll status",   "desc": "Receive a job_id. Poll /v1/jobs/:id every 2 seconds until complete." },
       "06": { "title": "Receive image", "desc": "Get the S3 image URL. Wallet deduction finalizes only at this point." }
@@ -45,7 +45,7 @@
     "perRequest": "per request",
     "mostPopular": "Most Popular",
     "cta": "Get Started",
-    "note": "Minimum wallet top-up $10 · Only $10 multiples accepted"
+    "note": "Minimum wallet top-up $50 · Only $50 multiples accepted"
   },
   "pricingPage": {
     "hero": {
@@ -72,8 +72,8 @@
     },
     "wallet": {
       "title": "How wallet top-ups work",
-      "rule1": "Minimum top-up is $10",
-      "rule2": "Only multiples of $10 are accepted ($10, $20, $50, $100)",
+      "rule1": "Minimum top-up is $50",
+      "rule2": "Only multiples of $50 are accepted ($50, $100, $200, $500)",
       "rule3": "Payments are processed via Stripe",
       "rule4": "Balance never expires"
     },
@@ -86,7 +86,7 @@
       "title": "Frequently asked questions",
       "items": {
         "q1": { "q": "When am I charged?",                    "a": "Only when a job completes successfully and an image_url is returned. If a job fails or is rejected by moderation, your wallet is not touched." },
-        "q2": { "q": "What is the minimum top-up?",           "a": "The minimum wallet top-up is $10. Top-ups are only accepted in multiples of $10 (e.g. $10, $20, $30, $50, $100)." },
+        "q2": { "q": "What is the minimum top-up?",           "a": "The minimum wallet top-up is $50. Top-ups are only accepted in multiples of $50 (e.g. $50, $100, $150, $200, $500)." },
         "q3": { "q": "What happens if my job fails?",         "a": "Nothing. Failed jobs — due to timeouts, server errors, or moderation blocks — do not deduct any balance from your wallet." },
         "q4": { "q": "Can I get a refund?",                   "a": "Wallet balance is generally non-refundable. For exceptional cases, please contact our support team and we'll review your request." },
         "q5": { "q": "Does my balance expire?",               "a": "No. Your wallet balance never expires. Top up once, use it whenever you need." },
@@ -330,15 +330,15 @@
     },
     "addBalance": {
       "title":       "Add Balance",
-      "subtitle":    "Top up your wallet. Minimum $10, multiples of $10 only.",
+      "subtitle":    "Top up your wallet. Minimum $50, multiples of $50 only.",
       "preset":      "Quick amounts",
       "custom":      "Custom amount",
-      "customPlaceholder": "Enter amount (e.g. 30)",
+      "customPlaceholder": "Enter amount (e.g. 100)",
       "proceed":     "Proceed to Stripe",
       "stripeNote":  "You will be redirected to Stripe to complete payment.",
       "rules": {
-        "min":      "Minimum top-up: $10",
-        "multiple": "Must be a multiple of $10",
+        "min":      "Minimum top-up: $50",
+        "multiple": "Must be a multiple of $50",
         "stripe":   "Processed via Stripe · Secure"
       }
     },

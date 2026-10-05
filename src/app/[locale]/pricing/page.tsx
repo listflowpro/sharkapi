@@ -154,7 +154,7 @@ function PricingCards() {
 function WalletInfo() {
   const t = useTranslations("pricingPage.wallet");
   const rules = ["rule1", "rule2", "rule3", "rule4"] as const;
-  const presets = ["$10", "$20", "$50", "$100"];
+  const presets = ["$50", "$100", "$200", "$500"];
 
   return (
     <section className="relative overflow-hidden">
@@ -193,10 +193,10 @@ function WalletInfo() {
                       {amount}
                     </div>
                     <div className="text-xs text-ocean-400 mt-1">
-                      {amount === "$10"  && "333 × 1K"}
-                      {amount === "$20"  && "666 × 1K"}
                       {amount === "$50"  && "1,666 × 1K"}
                       {amount === "$100" && "3,333 × 1K"}
+                      {amount === "$200" && "6,666 × 1K"}
+                      {amount === "$500" && "16,666 × 1K"}
                     </div>
                   </Card>
                 ))}
