@@ -2,8 +2,14 @@
  * Background queue worker — run standalone with:
  *   npm run worker
  *
- * Blocks on BRPOP, processes one job at a time, loops forever.
- * Errors are caught per-job so the worker never crashes.
+ * Polls the DB for "queued" jobs and runs each through the provider pipeline
+ * (processJobById → listflow.pro). Redis-INDEPENDENT: works even when the
+ * Redis endpoint is down, so a dead queue can no longer stall the system.
+ *
+ * Each job is processed through processJobById, which keeps its own optimistic
+ * lock (queued → processing) and idempotency check, so running more than one
+ * worker — or overlapping polls — never double-charges or double-processes.
+ * Errors are caught per-job; the worker loops forever and never crashes.
  */
 
 // Load .env.local before anything else (Next.js convention, not loaded by Node)
@@ -19,57 +25,58 @@ try {
   }
 } catch { /* .env.local not present — rely on process env */ }
 
-import Redis from "ioredis";
+import { createServiceClient } from "../lib/supabase/service";
 import { processJobById } from "./job-processor";
 
-const QUEUE_KEY = "sharkapi:jobs";
-const BLOCK_TIMEOUT = 5; // seconds — 0 = block forever
+const POLL_INTERVAL_MS = 2_000; // how often to look for new queued jobs
+const BATCH_SIZE = 5;           // how many jobs to run concurrently per poll
 
-const REDIS_URL = process.env.REDIS_URL;
-if (!REDIS_URL) {
-  console.error("[worker] REDIS_URL is not set — exiting");
-  process.exit(1);
+async function fetchQueuedJobIds(): Promise<string[]> {
+  const service = createServiceClient();
+  const { data, error } = await service
+    .from("jobs")
+    .select("id")
+    .eq("status", "queued")
+    .order("queued_at", { ascending: true })
+    .limit(BATCH_SIZE);
+
+  if (error) {
+    console.error("[worker] fetch error:", error.message);
+    return [];
+  }
+  return (data ?? []).map((r) => r.id as string);
 }
 
-const redis = new Redis(REDIS_URL, {
-  maxRetriesPerRequest: null, // required for blocking commands
-  enableReadyCheck: true,
-  lazyConnect: false,
-});
-
-redis.on("connect",      () => console.log("[worker] connected to Redis"));
-redis.on("error",  (err) => console.error("[worker] redis error:", err.message));
-redis.on("close",        () => console.warn("[worker] redis connection closed"));
-
 async function run(): Promise<void> {
-  console.log(`[worker] listening on queue "${QUEUE_KEY}" …`);
+  console.log("[worker] DB-polling worker started — draining queued jobs to listflow.pro …");
 
   while (true) {
-    let result: [string, string] | null = null;
-
+    let ids: string[] = [];
     try {
-      result = await redis.brpop(QUEUE_KEY, BLOCK_TIMEOUT);
+      ids = await fetchQueuedJobIds();
     } catch (err) {
-      console.error("[worker] brpop error:", (err as Error).message);
-      // Brief pause to avoid tight error loop on persistent Redis issues
-      await new Promise((r) => setTimeout(r, 1000));
+      console.error("[worker] fetch exception:", (err as Error).message);
+    }
+
+    if (ids.length === 0) {
+      await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS));
       continue;
     }
 
-    if (!result) {
-      // Timeout — nothing in queue, loop again
-      continue;
-    }
+    console.log(`[worker] picked up ${ids.length} queued job(s): ${ids.join(", ")}`);
 
-    const jobId = result[1];
-    console.log(`[worker] dequeued job ${jobId}`);
-
-    try {
-      await processJobById(jobId);
-    } catch (err) {
-      // processJobById already marked the job as failed in DB
-      console.error(`[worker] job ${jobId} failed:`, (err as Error).message);
-    }
+    // processJobById owns the queued→processing optimistic lock, so running the
+    // batch concurrently is safe (a job claimed elsewhere is simply skipped).
+    await Promise.allSettled(
+      ids.map(async (jobId) => {
+        try {
+          await processJobById(jobId);
+        } catch (err) {
+          // processJobById already marked the job failed in the DB.
+          console.error(`[worker] job ${jobId} failed:`, (err as Error).message);
+        }
+      }),
+    );
   }
 }
 
