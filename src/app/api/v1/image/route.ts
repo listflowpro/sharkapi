@@ -122,7 +122,8 @@ export async function POST(request: NextRequest) {
 
   // Hand the job to listflow immediately, after the 202 is sent — no waiting for
   // the next cron tick. The cron stays as the backstop if this never runs.
-  after(() => submitOne(service, job.id, prompt));
+  // storedImageUrl (if any) carries the reference image for image-to-image.
+  after(() => submitOne(service, job.id, prompt, storedImageUrl));
 
   return NextResponse.json(
     {

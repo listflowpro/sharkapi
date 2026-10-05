@@ -52,7 +52,10 @@ async function run(req: NextRequest) {
 
     const queued = (queuedData ?? []) as QueuedJob[];
     const submitResults = await Promise.allSettled(
-      queued.map((j) => submitOne(service, j.id, String(j.input_data?.prompt ?? ""))),
+      queued.map((j) => {
+        const img = typeof j.input_data?.image_url === "string" ? j.input_data.image_url : undefined;
+        return submitOne(service, j.id, String(j.input_data?.prompt ?? ""), img);
+      }),
     );
     const submitted = submitResults.filter((r) => r.status === "fulfilled" && r.value === "submitted").length;
 

@@ -34,6 +34,28 @@ function listflowHeaders(): Record<string, string> {
   };
 }
 
+// Pull "<bucket>/<path>" out of any Supabase storage URL (public/sign/authenticated).
+function parseStoragePath(url: string): { bucket: string; path: string } | null {
+  const m = url.match(/\/storage\/v1\/object\/(?:public\/|sign\/|authenticated\/)?([^/?]+)\/([^?]+)/);
+  if (!m) return null;
+  return { bucket: m[1], path: decodeURIComponent(m[2]) };
+}
+
+// Our reference images live in a PRIVATE bucket, so hand listflow a short-lived
+// signed URL it can fetch — never the raw base64 (keeps request bodies small).
+async function signInputImage(service: Service, imageUrl: string): Promise<string | undefined> {
+  const parsed = parseStoragePath(imageUrl);
+  if (!parsed) return undefined;
+  const { data, error } = await service.storage
+    .from(parsed.bucket)
+    .createSignedUrl(parsed.path, 2 * 60 * 60); // 2h — plenty for pickup
+  if (error || !data?.signedUrl) {
+    console.error("[pump] signing reference image failed:", error?.message);
+    return undefined;
+  }
+  return data.signedUrl;
+}
+
 async function requeue(service: Service, jobId: string): Promise<void> {
   await service
     .from("jobs")
@@ -60,7 +82,12 @@ async function markFailed(service: Service, jobId: string, reason: string, userI
  * Claim a queued job and hand it to listflow's external queue.
  * Returns: "submitted" | "claimed-by-other" | "failed" | "requeued".
  */
-export async function submitOne(service: Service, jobId: string, prompt: string): Promise<string> {
+export async function submitOne(
+  service: Service,
+  jobId: string,
+  prompt: string,
+  imageUrl?: string,
+): Promise<string> {
   // Atomic claim: queued → processing. Only one caller wins this row.
   const { data: claimed } = await service
     .from("jobs")
@@ -71,11 +98,19 @@ export async function submitOne(service: Service, jobId: string, prompt: string)
 
   if (!claimed || claimed.length === 0) return "claimed-by-other";
 
+  // Reference image (image-to-image): send listflow a signed URL it can fetch.
+  const signedImage = imageUrl ? await signInputImage(service, imageUrl) : undefined;
+
   try {
     const res = await fetch(`${LISTFLOW_BASE}/api/external/generate`, {
       method: "POST",
       headers: listflowHeaders(),
-      body: JSON.stringify({ job_id: jobId, prompt, mode: "both" }),
+      body: JSON.stringify({
+        job_id: jobId,
+        prompt,
+        mode: "both",
+        ...(signedImage ? { image_url: signedImage } : {}),
+      }),
     });
 
     if (!res.ok) {
