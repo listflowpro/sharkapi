@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { validateApiKey, isApiKeyError } from "@/lib/auth/validate-api-key";
 import { createServiceClient } from "@/lib/supabase/service";
 import { validateImageInput } from "@/lib/validation/image-input";
 import { enqueueJob } from "@/lib/queue/enqueue";
+import { submitOne } from "@/lib/queue/pump";
 import { uploadBase64Input, uploadUrlInput } from "@/lib/storage/upload-input";
 
 // POST /api/v1/image
@@ -118,6 +119,10 @@ export async function POST(request: NextRequest) {
   }
 
   await enqueueJob(job.id);
+
+  // Hand the job to listflow immediately, after the 202 is sent — no waiting for
+  // the next cron tick. The cron stays as the backstop if this never runs.
+  after(() => submitOne(service, job.id, prompt));
 
   return NextResponse.json(
     {

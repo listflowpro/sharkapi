@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateApiKey, isApiKeyError } from "@/lib/auth/validate-api-key";
 import { createServiceClient } from "@/lib/supabase/service";
+import { collectOne } from "@/lib/queue/pump";
 
 // GET /api/v1/jobs/:id
 export async function GET(
@@ -23,7 +24,7 @@ export async function GET(
   const service = createServiceClient();
 
   // ── 2. Fetch job (ownership enforced) ───────────────────────
-  const { data: job } = await service
+  let { data: job } = await service
     .from("jobs")
     .select(`
       id,
@@ -45,6 +46,38 @@ export async function GET(
   if (!job) {
     // Return 404 for both "not found" and "wrong owner" — no info leakage
     return NextResponse.json({ error: "Job not found." }, { status: 404 });
+  }
+
+  // ── 2b. If still in flight, check listflow right now so the result appears
+  // on this very poll instead of waiting for the next cron tick. ──
+  if (job.status === "processing") {
+    const changed = await collectOne(service, {
+      id: jobId,
+      user_id: userId,
+      pricing_snapshot: job.pricing_snapshot as Record<string, unknown> | null,
+      started_at: job.started_at as string | null,
+    });
+    if (changed) {
+      const { data: fresh } = await service
+        .from("jobs")
+        .select(`
+          id,
+          status,
+          source,
+          input_data,
+          pricing_snapshot,
+          error_message,
+          queued_at,
+          started_at,
+          completed_at,
+          created_at,
+          model:models(name, code, variant, category)
+        `)
+        .eq("id", jobId)
+        .eq("user_id", userId)
+        .single();
+      if (fresh) job = fresh;
+    }
   }
 
   // ── 3. Fetch outputs if completed ───────────────────────────
