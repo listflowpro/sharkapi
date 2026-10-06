@@ -18,7 +18,9 @@ import { notifyJobFailed, notifyLowBalance } from "@/lib/notifications/telegram"
 type Service = ReturnType<typeof createServiceClient>;
 
 const LISTFLOW_BASE = "https://listflow.pro";
-export const PROCESSING_TIMEOUT_MS = 8 * 60 * 1000; // give up on a stuck job (no charge)
+// 12 dk: GPT 6 dk denenir, sonra listflow tarafındaki Gemini→Runware yedek
+// zincirinin üretip teslim etmesi için pay bırakılır (eskiden 8 dk'ydı).
+export const PROCESSING_TIMEOUT_MS = 12 * 60 * 1000; // give up on a stuck job (no charge)
 
 export interface InFlightJob {
   id: string;
